@@ -1,0 +1,22 @@
+<!-- Form tiedosto joka käyttää POST metodia lähettäkseen Etunimen ja sukunimen -->
+<form action="/form" method="post">
+    <!-- Etunimi teksti ja tekstikentän luonti -->
+    <label for="firstname">Etunimi:</label>
+    <input type="text" id="firstname" name="firstname" required>
+    <br>
+    <!-- Sukunimi teksti ja tekstikentän luonti -->
+    <label for="surname">Sukunimi:</label>
+    <input type="text" id="surname" name="surname" required>
+    <br>
+        <!-- Valintaruudut ryhmille -->
+        <label>
+            <input type="checkbox" name="group" value="TiVi24B"> TiVi24B
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="group" value="TiVi20oa"> TiVi20oa
+        </label>
+        <br>
+        <!-- Lähetä painikkeen luonti joka käyttää style.css tiedostoa tyylittämiseen -->
+        <button type="submit" class="submit">Lähetä</button>
+</form>
