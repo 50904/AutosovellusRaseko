@@ -1,0 +1,20 @@
+<Head>
+    <title>Tämä on kuvat sivu</title>
+</Head>
+<body>
+    <h1>
+        Täällä näkyvät kuvat
+        <br>
+        <br>
+        <p class="text-success" style="font-size: large; font-weight: 700">space</p>
+        <img src="images/testimage.jpg" alt="">
+    </h1>
+    <div class="row">
+        {{#each imageList}}
+        <div class="col-md-4">
+            <div class="text-success" style="font-size: large; font-weight: 700">{{this.name}}</div>
+            <img src="{{this.src}}">
+        </div>
+        {{/each}}
+    </div>
+</body>
