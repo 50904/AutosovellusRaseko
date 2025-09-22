@@ -10,6 +10,11 @@ app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
+// Local libraries and modules
+// -------------------------
+
+const pgtools = require('./postgres-tools');
+
 // Reitti etusivulle
 app.get('/', (req, res) => {
   res.render('home', { title: 'Tervetuloa Express & Handlebars -sovellukseen!' });
@@ -18,6 +23,9 @@ app.get('/', (req, res) => {
 // Test route
 app.get('/test', (req, res) => {
   const data = {'testKey': 'hiihoo'};
+  pgtools.selectQuery('SELECT * FROM public.vapaana').then((resultset) => {
+    console.log(resultset.rows);
+  })
   res.render('test', data);
 });
 
