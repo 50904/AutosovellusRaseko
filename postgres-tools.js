@@ -47,18 +47,54 @@ const selectQuery = async (sqlstatement) => {
 
 // Home page
 
-// Vehicle list page
-
+// Vehicle list page - Get free vehicles
 const getFreeVehicles = async () => {
-    let resultset = await pool.query('SELECT * FROM public.vapaana');
+    let sqlstatements =('SELECT * FROM public.vapaana');
+    let resultset = await pool.query(sqlstatement);
     return resultset;
 }
-// Vehicle details page
 
-// Diary page
+// Vehicle list page - Get vehicles in use
+const getVehicleInUse = async () => {
+    let sqlstatements = 'SELECT * FROM public.ajossa';
+    let resultset = await pool.query(sqlstatement);
+    return resultset;
+}
 
-// Esimerkki: näin voit testata selectQuery-funktiota
+// Vehicle details page - vehicle in use by register number
+const getVehicleDetails = async (vehicleId) => {
+    let sqlstatements = "SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = 'XYZ-123'";
+    let resultset = await pool.query(sqlstatement);
+    return resultset;
+}
 
+// Vehicle details page - vehicle in use by register number: SQL + value
+const getVehicleDetails2 = async (values) => {
+    let sqlstatement = "SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = $1";
+    let resultset = await pool.query(sqlstatement, values);
+    return resultset;
+}
+
+// Vehicle details page - vehicle in use by register number: SQL + value 2nd method
+const query = {
+    text: "SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = $1",
+    values: ['XYZ-123']
+}
+
+const getVehicleDetails3 = async (query) => {
+    let resultset = await pool.query(query);
+    return resultset;
+}
+
+// Diary page - all vehicles
+const getDiary = async () => {
+    let sqlstatements = 'SELECT * FROM public.ajopaivakirja';
+    let resultset = await pool.query(sqlstatements);
+    return resultset;
+}
+// Location page - location by register number
+
+getVehicleDetails2(['XYZ-123']);
 // EXPORT FUNCTIONS
 // ----------------
-module.exports = {insertQuery, selectQuery};
+module.exports = {insertQuery, selectQuery, getFreeVehicles, getVehicleInUse, getVehicleDetails, getDiary};
