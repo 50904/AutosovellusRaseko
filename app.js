@@ -34,6 +34,26 @@ app.get('/about', (req, res) => {
   res.render('about', { title: 'Tietoa sovelluksesta', description: 'Tämä on testisivu sovelluksen tiedoille.', author: 'AutosovellusRaseko-tiimi' });
 });
 
+// TODO: Route to vehicle listing page: free vehicles and vehicles in use
+app.get('/vehicles', (req, res) => {
+    let freeVehicleData = [];
+    pgtools.getFreeVehicles().then((resultset) => {
+        freeVehicleData = resultset.rows;
+        console.log(freeVehicleData);
+    });
+    let inUseVehiclesData = [];
+    pgtools.getVehiclesInUse().then((resultset) => {
+        inUseVehiclesData = resultset.rows;
+        console.log(inUseVehiclesData);
+    });
+    res.send('Autojen tiedot tulevat tälle sivulle')
+});
+// TODO: Route to individual vehicle page: select vehicle by register number
+
+// TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
+
+// TODO: Route to vehicle's tracking page
+
 app.get('/diary', (req, res) => {
   res.render('diary', { title: 'diary', entries: [
     { date: '2025-09-17', distance: 120, driver: 'Matti' },
