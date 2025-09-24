@@ -59,7 +59,17 @@ const selectQuery = async (sqlstatement) => {
 
 // APP SPECIFIC QUERIES
 // --------------------
+/** 
+* Get all current vehicles and their status.
+* @summary Reads vehicle information from view autojen_tila (vehicle status)
+* @return {Promise} Returns a promise that resolves to the result set of the query.
+*/
 
+const getVehicleData = async () => {
+    let sqlstatement = 'SELECT * FROM public.autojen_tila';
+    let resultset = await pool.query(sqlstatement);
+    return resultset;
+}
 
 /** 
 * Get free vehicles from database.
@@ -89,34 +99,34 @@ const getVehiclesInUse = async () => {
 
 /** 
 * Get vehicle details from database.
-* @summary Returns all rows from view ajopaivakirja (vehicle details).
+* @summary Returns a row about vehicle currently in use by hard coded register number.
 * @async
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
 const getVehicleDetails = async () => {
-    let sqlstatement = "SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = 'XYZ-123'";
+    let sqlstatement = "SELECT * FROM public.aktiivinen_ajo WHERE rekisterinumero = 'XYZ-123'";
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
 
 /** 
 * Get vehicle details from database.
-* @summary Returns all rows from view ajopaivakirja (diary).
+* @summary Returns details about a vehicle currently in use
 * @async
 * @param {Array} values - Array of register numbers to be used in the query.
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
 const getVehicleDetails2 = async (values) => {
-    let sqlstatement = 'SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = $1';
+    let sqlstatement = 'SELECT * FROM public.aktiivinen_ajo WHERE rekisterinumero = $1';
     let resultset = await pool.query(sqlstatement, values);
     return resultset;
 }
 
 // Vehicle details page - vehicle in use by register number: SQL + value 2nd method
 const query = {
-    text: 'SELECT * FROM public.ajopaivakirja WHERE rekisterinumero = $1',
+    text: 'SELECT * FROM public.aktiivinen_ajo WHERE rekisterinumero = $1',
     values: ['XYZ-123']
 }
     
@@ -164,4 +174,4 @@ const getLocationByReg = async (values) => {
 // ----------------
 
 // TODO: Export all functions
-module.exports = {insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getVehicleDetails2, getDiary, runQueryWithValues, getLocationByReg};
+module.exports = {insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getVehicleDetails2, getDiary, runQueryWithValues, getLocationByReg, getVehicleData};

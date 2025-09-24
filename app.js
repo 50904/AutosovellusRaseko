@@ -34,26 +34,37 @@ app.get('/about', (req, res) => {
   res.render('about', { title: 'Tietoa sovelluksesta', description: 'Tämä on testisivu sovelluksen tiedoille.', author: 'AutosovellusRaseko-tiimi' });
 });
 
-// TODO: Route to vehicle listing page: free vehicles and vehicles in use
+//  Route to vehicle listing page: free vehicles and vehicles in use
 app.get('/vehicles', (req, res) => {
-    let freeVehicleData = [];
-    pgtools.getFreeVehicles().then((resultset) => {
-        freeVehicleData = resultset.rows;
-        console.log(freeVehicleData);
+    pgtools.getVehicleData().then((resultset) => {
+        // Lets give a key for the resultset and render it to the page
+        res.render('vehicles', { vehicleList: resultset.rows });
     });
-    let inUseVehiclesData = [];
-    pgtools.getVehiclesInUse().then((resultset) => {
-        inUseVehiclesData = resultset.rows;
-        console.log(inUseVehiclesData);
-    });
-    res.send('Autojen tiedot tulevat tälle sivulle')
+    
 });
-// TODO: Route to individual vehicle page: select vehicle by register number
+// Route to individual vehicle page: select vehicle by register number
+app.get('/vehicleDetail', (req, res) => {
+    pgtools.getVehicleDetails2(['FNK-129']).then((resultset) => {
+        // Lets give a key for the resultset and render it to the page
+        res.render('vehicleDetail', resultset.rows[0]);
+        
+    });
+    
+  });
 
+// TODO: Route to diary containing all vehicles
+app.get('/diary2', (req, res) => {
+  pgtools.getDiary().then((resultset) => {
+        // Lets give a key for the resultset and render it to the page
+        res.render('diary2', { diaryData: resultset.rows });
+    });
+});
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
 
-// TODO: Route to vehicle's tracking page
+// TODO: Route to vehicle's tracking page: location by register number
 
+// SERVER START
+// ------------
 app.get('/diary', (req, res) => {
   res.render('diary', { title: 'diary', entries: [
     { date: '2025-09-17', distance: 120, driver: 'Matti' },
