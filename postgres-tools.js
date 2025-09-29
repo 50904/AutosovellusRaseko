@@ -133,7 +133,7 @@ const query = {
 /** 
 * A generic function to run a query with pre-structured statement and values.
 * @summary Executes a SQL query with the provided parameters.
-* @param {Object} query - The query object containing text and values.
+* @param {Object} query - The query object containing SQL clause as text and values as an array of values.
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
@@ -163,15 +163,17 @@ const getDiary = async () => {
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
-
 const getLocationByReg = async (values) => {
     let sqlstatement = 'SELECT * FROM public.sijainti WHERE rekisterinumero = $1';
     let resultset = await pool.query(sqlstatement, values);
     return resultset;
 }
 
+selectQuery('SELECT * FROM jest_test').then((resultset) => {
+    console.log(resultset.rows);
+})
 // EXPORT FUNCTIONS
 // ----------------
 
-// TODO: Export all functions
-module.exports = {insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getVehicleDetails2, getDiary, runQueryWithValues, getLocationByReg, getVehicleData};
+// TODO: Export all functions and the pool itself. Jest needs the pool to run tests
+module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getVehicleDetails2, getDiary, runQueryWithValues, getLocationByReg, getVehicleData};
