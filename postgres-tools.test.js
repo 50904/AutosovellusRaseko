@@ -4,7 +4,7 @@
 // IMPORT THE MODULE TO BE TESTED
 // ------------------------------
 
-// Custom mnodule to make queries from PostgreSQL databases
+// Custom module to make queries from PostgreSQL databases
 const pgTools = require('./postgres-tools');
 
 // Container function to include serveral test functions
