@@ -1,10 +1,10 @@
 <body>
     <div class="card-group">
         {{#each vehicleList}}
-        <div class="card"><img class="vehicle-image" width="577" height="433" src="FNK129.png" />
+        <div class="card"><img class="vehicle-image" src="/images/{{rekisterinumero}}.png" />
             <div class="card-body">
                 <h4 class="card-title">{{rekisterinumero}}</h4>
-                <p class="card-text">{{merkki}}<br />{{malli}}<br />henkilömäärä: {{henkilomaara}}<br />automaatti: {{}} <br>{{status}}</p><button class="btn btn-primary" type="button" style="background: var(--bs-danger);">Näytä</button>
+                <p class="card-text">{{merkki}} {{malli}}<br />henkilömäärä {{henkilomaara}}<br />automaatti {{automaatti}} <br>{{status}}</p><button class="{{status}}" type="button">Näytä</button>
             </div>
         </div>
         {{/each}}
