@@ -59,24 +59,31 @@ a:hover {
 .vapaana {
    display: block;
    margin: 0 auto;
-   font-size: 16px;
    background-color: #218838;
-   color: #fff;  
+   color: #fff;
    border: none;
    border-radius: 5px;
-   padding: 10px 80px;
+   padding: 10px 50px;    
+}
+
+.vapaana_bg {
+    background-color: #218838;
+    color: #fff;    
 }
 
 /* Styling for buttons indicating status ajossa (occupied)*/
 .ajossa {
     display: block;
     margin: 0 auto;
-    font-size: 16px;
     background-color: #dc3545;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 80px;
+    padding: 10px 50px;
+}
+.ajossa-bg {
+    background-color: #d78089;
+    color: #fff;    
 }
 /* Card layout for vehicle list */
 .card-group {
@@ -91,7 +98,7 @@ a:hover {
     /* Set card width to 25% for 4 columns */
     width: 25%;
     margin: 1%;
-    background: #fff;
+    background: #ffffff;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -99,11 +106,42 @@ a:hover {
     /* Adjust width for smaller screens */
     @media (max-width: 600px) {
         width: 100%;
-
     }
     
 }
+.card-ajossa {
+    float: left;
+    /* Set card width to 25% for 4 columns */
+    width: 25%;
+    margin: 1%;
+    background-image: linear-gradient(to bottom , #fd3636, #f2bcbc);
+    /*background: #f2bcbc;*/
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px;
+    /* Adjust width for smaller screens */
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
 
+.card-vapaana {
+    float: left;
+    /* Set card width to 25% for 4 columns */
+    width: 25%;
+    margin: 1%;
+    background-image: linear-gradient(to bottom , #36fd57, #bcf2c3);
+    /*background: #baf4bd;*/
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px;
+    /* Adjust width for smaller screens */
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
 .vehicle-image {
     /* Set image size relative to viewport width (4 columns)*/
     width: 23vw;
@@ -130,15 +168,9 @@ a:hover {
     margin-bottom: 10px;
     color: #333;
 }
-
-/* Set the background color of car cards to pink */
-.card {
-  background-color: rgb(229, 228, 236);
-}
-
 /* Responsive adjustments for small screens*/
 @media (min-width: 600px) {
     .card-group {
         width: 100%;
-    };
+    } 
 }
