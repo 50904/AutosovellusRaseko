@@ -1,0 +1,170 @@
+/* Set size to follow parent's size */
+* {
+    box-sizing: border-box;
+}
+
+/* Basic styling for body and text elements */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+h1 {
+    color: #333;
+}
+p {
+    color: #262626;
+    line-height: 1.6;
+}
+/* Link styling */
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+/* Common settings for Containers*/
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Styling for ordinary buttons */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #218838;
+}
+
+/* Styling for buttons indicating status vapaana (available)*/
+.vapaana {
+   display: block;
+   margin: 0 auto;
+   background-color: #218838;
+   color: #fff;
+   border: none;
+   border-radius: 5px;
+   padding: 10px 50px;    
+}
+
+.vapaana_bg {
+    background-color: #218838;
+    color: #fff;    
+}
+
+/* Styling for buttons indicating status ajossa (occupied)*/
+.ajossa {
+    display: block;
+    margin: 0 auto;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 50px;
+}
+.ajossa-bg {
+    background-color: #d78089;
+    color: #fff;    
+}
+/* Card layout for vehicle list */
+.card-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Individual card styling */
+.card {
+    /* Prevent cards to occupy empty space in the page*/
+    flex: none;
+    margin: 1%;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px;
+}
+.card-ajossa {
+    float: left;
+    /* Set card width to 25% for 4 columns */
+    width: 25%;
+    margin: 1%;
+    background-image: linear-gradient(to bottom , #fd3636, #f2bcbc);
+    /*background: #f2bcbc;*/
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px;
+    /* Adjust width for smaller screens */
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
+
+.card-vapaana {
+    float: left;
+    /* Set card width to 25% for 4 columns */
+    width: 25%;
+    margin: 1%;
+    background-image: linear-gradient(to bottom , #36fd57, #bcf2c3);
+    /*background: #baf4bd;*/
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px;
+    /* Adjust width for smaller screens */
+    @media (max-width: 600px) {
+        width: 100%;
+    }
+}
+.vehicle-image {
+    /* Set image size relative to viewport width (4 columns)*/
+    width: 25vw;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    /* Adjust width for smaller screens */
+    @media (max-width: 600px) {
+        width: 80vw;
+    }
+}
+.card-body {
+    margin-bottom: 15px;
+}
+
+.card-text {
+    font-size: 14px;
+    color: #555;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+/* Responsive adjustments for small screens*/
+@media (max-width: 600px) {
+    .card {
+        flex: 100%;
+    } 
+}
+    

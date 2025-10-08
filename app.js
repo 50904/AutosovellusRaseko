@@ -126,6 +126,12 @@ app.get('/vehicledetails-OXZ-915', (req, res) => {
 app.get('/vehicledetails', (req, res) => {
   res.render('vehicledetails', { title: 'Ajoneuvon tiedot', details: { reg: 'ABC-123', model: 'Testiauto', year: 2025 } });
 });
+
+app.get('/vlistFlex', (req, res) => {
+
+       res.render('vlistFlex');
+});
+
 app.listen(PORT, () => {
   console.log(`Serveri käynnissä portissa ${PORT}`);
 });
