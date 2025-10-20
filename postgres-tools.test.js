@@ -19,14 +19,14 @@ describe('postgres-tools funktions testing', () => {
         // Define a lists of objects with correct properties
         let correctResultSet = [
       { 
-        id: 1,
+        id: 2,
         nimi: 'Jakke Jäynä',
         palkka: 2388.5,
         koodari: true,
         aikaleima: '2025-09-29T08:18:08.077Z'
       },
       {
-        id: 2,
+        id: 1,
         nimi: 'Calle Keckelberg',
         palkka: 7650,
         koodari: false,
