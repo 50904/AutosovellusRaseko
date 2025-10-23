@@ -2,9 +2,12 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 
 const app = express();
+
+// Set a folder for static files and images
 const PORT = process.env.PORT || 3000;
 app.use(express.static('public'));
 app.use('/images', express.static('public/images'));
+app.use('/icons', express.static('public/icons'));
 
 // Handlebars-konfiguraatio
 app.engine('handlebars', exphbs.engine());

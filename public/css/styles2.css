@@ -168,6 +168,27 @@ a:hover {
     margin-bottom: 10px;
     color: #333;
 }
+
+.raseko-darkblue {
+    color: #1b3259;
+}
+
+.raseko-blue {
+    color: #0095b2;
+}
+
+.raseko-lightblue {
+    color: #4bbcc5;
+}
+
+.raseko-pink {
+    color: #df2070;
+}
+
+.raseko-grey {
+    color: #efefef;
+}
+
 /* Responsive adjustments for small screens*/
 @media (min-width: 600px) {
     .card-group {
