@@ -99,6 +99,10 @@ app.get('/index', (req, res) => {
   res.render('index', { title: 'Etusivu', welcome: 'Tervetuloa testietusivulle!' });
 });
 
+app.get('/svgtest', (req, res) => {
+  res.render('svgtest');
+});
+
 app.get('/locate', (req, res) => {
   res.render('locate', { title: 'Sijainti', location: { lat: 60.5, lng: 22.3 } });
 });
