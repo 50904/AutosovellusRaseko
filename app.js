@@ -24,6 +24,10 @@ app.get('/', (req, res) => {
   res.render('home', { title: 'Tervetuloa Express & Handlebars -sovellukseen!' });
 });
 
+app.get('/iconList', (req, res) => {
+  res.render('iconList');
+});
+
 // Test route
 app.get('/test', (req, res) => {
   const data = {'testKey': 'hiihoo'};
@@ -32,6 +36,7 @@ app.get('/test', (req, res) => {
   })
   res.render('test', data);
 });
+
 
 // Reitit kaikille Handlebars-sivuille
 app.get('/about', (req, res) => {

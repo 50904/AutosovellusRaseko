@@ -1,5 +1,6 @@
 /* Set a global variables to change colors in icons */
 :root {
+    --icon-stroke-width: 1px;
     --icon-stroke-color: black;
     --icon-fill-color: none;
     --icon-background-color: none;
