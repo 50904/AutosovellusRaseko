@@ -235,6 +235,13 @@ a:hover {
     color: #efefef;
 }
 
+.icon-raseko-colors-dark{
+    --icon-stroke-color: var(--color-raseko-grey);
+    --icon-fill-color: var(--color-raseko-dark-blue);
+    --icon-background-color: var(--color-raseko-light-blue);
+}
+
+
 /* Responsive adjustments for small screens*/
 @media (min-width: 600px) {
     .card-group {
