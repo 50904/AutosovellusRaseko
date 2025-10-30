@@ -1,3 +1,16 @@
+/* Set a global variables to change colors in icons */
+:root {
+    --icon-stroke-color: black;
+    --icon-fill-color: none;
+    --icon-background-color: none;
+    --color-raseko-dark-blue: rgb(27, 51, 89);
+    --color-raseko-blue: rgb(0, 150, 179);
+    --color-raseko-light-blue: rgb(75, 188, 197);
+    --color-raseko-pink: rgb(232, 32, 112);
+    --color-raseko-grey: rgb(239, 239, 239);
+}
+
+
 /* Set size to follow parent's size*/
 * {
     box-sizing: border-box;
@@ -30,7 +43,7 @@ a:hover {
 .container {
     width: 80%;
     margin: auto;
-    overflow: hidden;
+    overflow: auto;
     padding: 20px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -167,6 +180,38 @@ a:hover {
     font-size: 18px;
     margin-bottom: 10px;
     color: #333;
+}
+
+/* An example style for normal icons */
+.icon-normal {
+    width: 1em;
+    height: 1em;
+}
+.icon-big{
+    width: 3em;
+    height: 3em;
+}
+
+.icon-medium{
+    width: 2em;
+    height: 2em;
+}
+
+.icon-huge{
+    width: 6em;
+    height: 6em;
+}
+/* Make a SVG icon very big and chane fill to red and remove stroke*/
+.icon-enermous-red{
+    width: 8em;
+    height: 8em;
+    --icon-stroke-color:none;
+    --icon-fill-color: rgb(171, 10, 10);
+    --icon-background-color: rgb(225, 194, 127);
+}
+.icon-enermous{
+    width: 8em;
+    height: 8em;
 }
 
 .raseko-darkblue {

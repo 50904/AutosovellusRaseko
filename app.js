@@ -10,7 +10,7 @@ app.use('/images', express.static('public/images'));
 app.use('/icons', express.static('public/icons'));
 
 // Handlebars-konfiguraatio
-app.engine('handlebars', exphbs.engine());
+app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
