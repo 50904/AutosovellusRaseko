@@ -1,5 +1,5 @@
 const express = require('express');
-const exphbs = require('express-handlebars');
+const {engine} = require('express-handlebars');
 
 const app = express();
 
