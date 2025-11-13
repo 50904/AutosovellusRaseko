@@ -1,11 +1,17 @@
 <body>
+    {{!-- Main container of the page is card-group --}}
     <div class="card-group">
+
+        {{!-- Look through vehicle list and render dybnamic data --}}
         {{#each vehicleList}}
-        <div class="card"><img class="vehicle-image" src="/images/{{rekisterinumero}}.png" />
+
+        {{!-- Create a car for every vehicle and set style according to status --}}
+        <div class="card"-{{status}}><img class="vehicle-image" src="/images/{{rekisterinumero}}.png" />
             <div class="card-body">
-                <h4 class="card-title">{{rekisterinumero}}  <br>on {{status}}</h4>
+                <h4 class="card-title">{{rekisterinumero}}  <br>{{status}}</h4>
                 <p class="card-text">{{merkki}} {{malli}}<br />henkilömäärä {{henkilomaara}}<br />automaatti {{automaatti}}</p>
-                <button class="{{status}}" type="button">Näytä</button>
+                    {{!-- add link to individual and style it as a button --}}
+                    <a class="{{status}}-btn" href="/vehicleDetails?register={{rekisterinumero}}">Näytä</a>
             </div>
         </div>
         {{/each}}
