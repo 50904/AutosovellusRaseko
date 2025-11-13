@@ -1,0 +1,21 @@
+<h1>Kaikki ajot</h1>
+<p>Seuraavasta taulukosta näkyy kaikkien autojen ajot</p>
+
+<table>
+    <tr>
+        <th>Auto</th>
+        <th>Kuljettaja</th>
+        <th>Tarkoitus</th>
+        <th>Lähtö</th>
+        <th>Paluu</th>
+    </tr>
+    {{#each diaryData}}
+    <tr>
+        <td>{{rekisterinumero}}</td>
+        <td>{{etunimi}} {{sukunimi}}</td>
+        <td>{{tarkoitus}}</td>
+        <td>{{otto}}</td>
+        <td>{{palautus}}</td>
+    </tr>
+    {{/each}}
+</table>
