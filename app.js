@@ -39,14 +39,19 @@ app.set('views', './views');
 
 // Route to home page
 app.get('/', (req, res) => {
-  res.send('This text will be replace by a handlebars homepage. Navigate to /tesxt to see dynamic data in action')
+  res.render('index')
+});
+
+app.get('/welcome', (req, res) => {
+  let user = req.query.user
+  res.render('welcome', {user: user})
 });
 
 // Route to vehicle listing page: free vehicles and vehicles in use
 app.get('/vehiclelist', (req, res) => {
   pgtools.getVehicleData().then((resultset) => {
     // Lets give a key for the resultset and render it to the page
-    res.render('vehicleList', { vehicleList: resultset.rows });
+    res.render('vehicleList', { vehicleList: resultset.rows })
   });
 });
 
@@ -63,7 +68,7 @@ app.get('/vehicleDetails', (req, res) => {
       resultset.rows[0].otto = dateTimeValue;
 
       // Render it to the page
-      res.render('vehicleDetails', resultset.rows[0]);
+      res.render('vehicleDetails', resultset.rows[0])
     });
 });
 
@@ -71,7 +76,7 @@ app.get('/vehicleDetails', (req, res) => {
 app.get('/diary', (req, res) => {
     pgtools.getDiary().then((resultset) => {
         // Lets give a key for the resultset and render it to the page
-        let rows = resultset.rows
+        let rows = resultset.rows;
         let row = 0
         let formattedTake = {}
         let formattedReturn = {}
@@ -81,7 +86,7 @@ app.get('/diary', (req, res) => {
                 formattedTake.time = '-'
             }
             else {
-            formattedTake = pgtools.convertToDateTimeObject(rows[row].otto);
+            formattedTake = pgtools.convertToDateTimeObject(rows[row].otto)
             }
 
              if (rows[row].palautus == null) {
@@ -95,8 +100,17 @@ app.get('/diary', (req, res) => {
             rows[row].otto = formattedTake.date + ' kello ' + formattedTake.time;
             rows[row].palautus = formattedReturn.date + ' kello ' + formattedReturn.time;
         }
-        res.render('diary', {diaryData: rows});
+        res.render('diary', {diaryData: rows})
     })
+});
+
+app.get('/filterDiary', (req, res) => {
+  pgtools.selectQuery('SELECT rekisterinumero FROM auto;').then((resultset) => {
+    console.log(resultset)
+    let options = {registers: resultset.rows}
+    console.log(options)
+    res.render('filterDiary', options);
+  })
 });
 
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
@@ -107,4 +121,4 @@ app.get('/diary', (req, res) => {
 // ------------
 
 app.listen(PORT);
-console.log(`Server started on port ${PORT}`)
+console.log(`Server started on port ${PORT}`);
