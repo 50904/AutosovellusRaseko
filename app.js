@@ -71,7 +71,6 @@ app.get('/vehicleDetails', (req, res) => {
 app.get('/diary', (req, res) => {
     pgtools.getDiary().then((resultset) => {
         // Lets give a key for the resultset and render it to the page
-        //console.log(resultset.rows[1])
         let rows = resultset.rows
         console.log(rows[0])
         let row = 0
