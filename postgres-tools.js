@@ -62,6 +62,7 @@ const selectQuery = async (sqlstatement) => {
 /** 
 * Get all current vehicles and their status.
 * @summary Reads vehicle information from view autojen_tila (vehicle status)
+* @async
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
@@ -161,19 +162,20 @@ const getLocationByReg = async (values) => {
 * @param {timestamp} timestamp - Timestamp to be converted to string format.
 * @return {object} Object containing date and time as string.
 */
-const convertToDateTimeObject = async (timestamp) => {
+const convertToDateTimeObject = (timestamp) => {
     let isoTimestamp = timestamp.toISOString();
     let splittedISOTimestamp = isoTimestamp.split('T');
-    let splittedTime = splittedISOTimestamp[1].split('.');
+    let splittedTime = splittedISOTimestamp[1].split('.')
     let result = {date: splittedISOTimestamp[0],
         time: splittedTime[0]
     };
-    return result
+    return result;
 }
 
-selectQuery('SELECT * FROM jest_test').then((resultset) => {
-    console.log(resultset.rows);
+/*selectQuery('SELECT * FROM jest_test').then((resultset) => {
+    console.log(resultset.rows)
 })
+*/
 // EXPORT FUNCTIONS
 // ----------------
 

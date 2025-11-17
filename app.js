@@ -39,7 +39,7 @@ app.set('views', './views');
 
 // Route to home page
 app.get('/', (req, res) => {
-  res.render('home', { title: 'Tervetuloa Express & Handlebars -sovellukseen!' });
+  res.send('This text will be replace by a handlebars homepage. Navigate to /tesxt to see dynamic data in action')
 });
 
 // Route to vehicle listing page: free vehicles and vehicles in use
@@ -57,46 +57,50 @@ app.get('/vehicleDetails', (req, res) => {
 
       // Convert time stamp to user friendly string
       let userFriendlyTimestamp = pgtools.convertToDateTimeObject(resultset.rows[0].otto);
-      console.log(userFriendlyTimestamp);
-      let dateTimeValue = userFriendlyTimestamp.date + ' kello ' + userFriendlyTimestamp.time;
+      let dateTimeValue = userFriendlyTimestamp.date + ' kello ' + userFriendlyTimestamp.time
       
       // Change original timestamp to string value
       resultset.rows[0].otto = dateTimeValue;
+
       // Render it to the page
       res.render('vehicleDetails', resultset.rows[0]);
     });
 });
 
-// Route to diary page: all entries for all vehicles
+// Route to diary containing all vehicles
 app.get('/diary', (req, res) => {
-  pgtools.getDiary().then((resultset) => {
-    // Lets give a key for the resultset and render it to the page
-    let rows = resultset.rows
-    console.log(rows[0])
-    let row = 0
-    let fromattedTake = {}
-    let formattedReturn = {}
-    for (row in rows) {
-      if (rows[row].otto == null) {
-        fromattedTake.date = '-'
-        fromattedTake.time = '-'
-      }else{
-        fromattedTake = pgtools.convertToDateTimeObject(rows[row].otto);
-      }
+    pgtools.getDiary().then((resultset) => {
+        // Lets give a key for the resultset and render it to the page
+        //console.log(resultset.rows[1])
+        let rows = resultset.rows
+        console.log(rows[0])
+        let row = 0
+        let formattedTake = {}
+        let formattedReturn = {}
+        for (row in rows) {
+            if (rows[row].otto == null) {
+                formattedTake.date = '-'
+                formattedTake.time = '-'
+            }
+            else {
+            formattedTake = pgtools.convertToDateTimeObject(rows[row].otto);
+            }
 
-      if (rows[row].palautus == null) {
-        formattedReturn.date = '-'
-        formattedReturn.time = '-'
-      }else{
-        formattedReturn = pgtools.convertToDateTimeObject(rows[row].palautus);
-      }
-      resultset.rows[row].otto = fromattedTake.date + ' kello ' + fromattedTake.time;
-      resultset.rows[row].palautus = formattedReturn.date + ' kello ' + formattedReturn.time;
-      console.log(rows[row].otto)
-      console.log(rows[row].palautus)
-    };
-    res.render('diary', { diaryData: rows }); 
-  });
+             if (rows[row].palautus == null) {
+                formattedReturn.date = '-'
+                formattedReturn.time = '-'
+            }
+            else {
+            formattedReturn = pgtools.convertToDateTimeObject(rows[row].palautus);
+            }
+            
+            rows[row].otto = formattedTake.date + ' kello ' + formattedTake.time;
+            rows[row].palautus = formattedReturn.date + ' kello ' + formattedReturn.time;
+            console.log(rows[row].otto)
+            console.log(rows[row].palautus)
+        }
+        res.render('diary', {diaryData: rows});
+    })
 });
 
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number

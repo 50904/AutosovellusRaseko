@@ -1,11 +1,23 @@
-<div class="container">
-    <img src="/images/{{rekisterinumero}}.png" alt="Auto">
-    <h1 class="align-center">{{rekisterinumero}}</h1>
-        <img src="/icons/driver.svg" alt="Kuljettaja" width="15%" height="auto">
-        <h2>{{kuljettaja}}</h2>
-        <img src="/icons/reason.svg" alt="Ajon tarkoitus" width="15%" height="auto">
-        <h2>{{tarkoitus}}</h2>
-        <img src="/icons/time.svg" alt="Lähtöaika" width="15%" height="auto">
-    <h2>{{otto}}</h2>
-    {{!-- </div> --}}
-</div>
+
+<body>
+    <div class="container">
+        <img class="vehicle-detail-image" src="images/{{rekisterinumero}}.png" alt="Auto">
+        <h1 class="big-text align-center">{{rekisterinumero}}</h1>
+        <div class="alignment-box">
+            <table class="drive-information">
+                <tr>
+                    <td><svg class="icon-huge icon-raseko-colors-dark"><use href="icons/autoSovellusRasekoSprites.svg#driver" /></svg></td>
+                    <td class="big-text">{{kuljettaja}}</td>
+                </tr>
+                <tr>
+                    <td><svg class="icon-huge icon-raseko-colors-dark"><use href="icons/autoSovellusRasekoSprites.svg#reason" /></svg></td>
+                    <td class="big-text">{{tarkoitus}}</td>
+                </tr>
+                <tr>
+                    <td><svg class="icon-huge icon-raseko-colors-dark"><use href="icons/autoSovellusRasekoSprites.svg#time" /></svg></td>
+                    <td class="big-text">{{otto}}</td>
+                </tr>
+            </table>
+            </div>
+        </div>
+</body>
