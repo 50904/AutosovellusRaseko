@@ -72,7 +72,6 @@ app.get('/diary', (req, res) => {
     pgtools.getDiary().then((resultset) => {
         // Lets give a key for the resultset and render it to the page
         let rows = resultset.rows
-        console.log(rows[0])
         let row = 0
         let formattedTake = {}
         let formattedReturn = {}
@@ -95,8 +94,6 @@ app.get('/diary', (req, res) => {
             
             rows[row].otto = formattedTake.date + ' kello ' + formattedTake.time;
             rows[row].palautus = formattedReturn.date + ' kello ' + formattedReturn.time;
-            console.log(rows[row].otto)
-            console.log(rows[row].palautus)
         }
         res.render('diary', {diaryData: rows});
     })
