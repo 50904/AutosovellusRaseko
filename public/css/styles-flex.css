@@ -11,6 +11,7 @@
     --color-info-box-bg: #cfd1d5;
     --shadow-raseko-dark-blue: rgba(27, 51, 89, 0.3);
     --shadow-raseko-pink: rgb(232, 32, 112, 0.3);
+    --color-raseko-highlilghter: rgba(75, 188, 197, 0.3);
 }
 /* Set size to follow parent's size */
 * {
@@ -41,6 +42,9 @@ p {
     padding: 20px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    @media (max-width: 600px) {
+        width: 100%;
+    }
 }
 .align-center {
     text-align: center;
@@ -209,12 +213,71 @@ p {
 }
 
 .drive-information {
+    border: none !important;
+    background-color: white;
     border-spacing: 30px;
 }
 
 .big-text {
     font-size: 3em;
 }
+
+th {
+    padding: 10px;
+    font-size: small;
+    color: var(--color-raseko-grey);
+    background-color: var(--color-raseko-dark-blue);
+    border: 1px solid var(--color-raseko-dark-blue);
+}
+
+td {
+    padding: 10px;
+    font-size: small;
+    color: var(--color-raseko-dark-blue);
+    border: 1px solid var(--color-raseko-dark-blue);
+}
+
+tr:nth-child(even) {
+    background-color: var(--color-info-box-bg);
+}
+
+tr:hover {
+    background-color: var(--color-raseko-highlilghter);
+}
+
+table {
+    width: auto;
+    border: 1px solid var(--color-raseko-dark-blue);
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+.input-field {
+    font-size: larger;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.raseko-btn {
+
+    display: block;
+    margin: 0 auto;
+    background-color: var(--color-raseko-dark-blue);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none !important;
+    font-size: 24px;
+    
+    /* font-size: larger;
+    padding: 5px 10px 5px 10px;
+    color: var(--color-raseko-grey);
+    background-color: var(--color-raseko-dark-blue);
+    border-radius: 5px; */
+}
+
 /* Responsive adjustments for small screens*/
 @media (max-width: 600px) {
     .card {
