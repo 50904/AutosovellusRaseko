@@ -1,0 +1,7 @@
+{{!-- Form for filtering Diary data --}}
+<label for="registerNumber">Rekisteri</label><br>
+<select class="input-field" name="rekisterinumero" id="rekisterinumero">
+    {{#each registers}}
+        <option value="{{rekisterinumero}}">{{rekisterinumero}}</option>        
+    {{/each}}
+</select>
