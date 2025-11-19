@@ -37,6 +37,7 @@ p {
 /* Common settings for Containers*/
 .container {
     width: 80%;
+    height: auto;
     margin: auto;
     overflow: auto;
     padding: 20px;
@@ -247,12 +248,12 @@ tr:hover {
 
 table {
     width: auto;
-    border: 1px solid var(--color-raseko-dark-blue);
     border-collapse: collapse;
     padding: 10px;
 }
 
 .input-field {
+    font-family: Arial, sans-serif;
     font-size: larger;
     margin-bottom: 10px;
     margin-top: 5px;
@@ -270,12 +271,13 @@ table {
     text-align: center;
     text-decoration: none !important;
     font-size: 24px;
-    
-    /* font-size: larger;
-    padding: 5px 10px 5px 10px;
-    color: var(--color-raseko-grey);
-    background-color: var(--color-raseko-dark-blue);
-    border-radius: 5px; */
+}
+
+.big-checkbox {
+    /* transform: scale(2); */
+    width: 20px;
+    height: 20px;
+    padding: 10px;
 }
 
 /* Responsive adjustments for small screens*/
