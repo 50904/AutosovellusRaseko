@@ -105,13 +105,74 @@ app.get('/diary', (req, res) => {
 });
 
 app.get('/filterDiary', (req, res) => {
-  pgtools.selectQuery('SELECT rekisterinumero FROM auto;').then((resultset) => {
-    console.log(resultset)
-    let options = {registers: resultset.rows}
-    console.log(options)
-    res.render('filterDiary', options);
+  let options = {}
+  let regitserList = []
+  let driverList = []
+  let reasonList = []
+
+  // Fetch registernumber
+  pgtools.selectQuery('SELECT * FROM webrekisteri;').then((resultset) => {
+    regitserList = resultset.rows
+
+    // Fetch reason
+    pgtools.selectQuery('SELECT * FROM webtarkoitukset;').then((resultset) => {
+      reasonList = resultset.rows
+
+      // Fetch driver
+      pgtools.selectQuery('SELECT * FROM webkuljettajat;').then((resultset) => {
+        driverList = resultset.rows
+
+        // options
+        options = {
+          registers: regitserList,
+          reasons: reasonList,
+          drivers: driverList
+        };
+      res.render('filterDiary', options)
+      })
+    })
   })
 });
+
+app.get('/filteredDiary', (req, res) => {
+  let registerFilter = req.query.rekisterinumero
+  let registerFilterValid = req.query.rekisterisuodatus
+  let reasonFilter = req.query.tarkoitus
+  let reasonFilterValid = req.query.tarkoitussuodatus
+  let driverFilter = req.query.nimi
+  let driverFilterValid = req.query.kuljettajasuodatus
+  let startFilter = req.query.alkaa
+  let endFilter = req.query.loppuu
+  let dateFilterValid = req.query.ottosuodatus
+  
+  let conditions = ''
+  if (registerFilterValid == 'on') {
+    conditions = conditions + 'rekisterinumero = ' + registerFilter + ' AND ';
+  }
+  if (reasonFilterValid == 'on') {
+    conditions = conditions + 'tarkoitus = ' + reasonFilter + ' AND ';
+  }
+  if (driverFilterValid == 'on') {
+    conditions = conditions + 'nimi = ' + driverFilter +  ' AND ';
+  }
+  if (dateFilterValid == 'on') {
+    conditions = conditions + 'otto BETWEEN ' + startFilter + ' AND ' + endFilter;
+  }
+
+  let whereClause = 'WHERE ' + conditions
+  console.log(whereClause.endsWith(' AND '))
+  if (whereClause.endsWith(' AND ')) {
+    whereClause = whereClause.substring(-5)
+  }
+
+  console.log(registerFilter)
+  console.log(registerFilterValid)
+  console.log(whereClause)
+})
+
+app.get('/formTest', (req, res) => {
+  res.render('formTest')
+})
 
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
 
