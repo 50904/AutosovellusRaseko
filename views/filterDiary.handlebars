@@ -1,7 +1,66 @@
 {{!-- Form for filtering Diary data --}}
-<label for="registerNumber">Rekisteri</label><br>
-<select class="input-field" name="rekisterinumero" id="rekisterinumero">
-    {{#each registers}}
-        <option value="{{rekisterinumero}}">{{rekisterinumero}}</option>        
-    {{/each}}
-</select>
+<body>
+    <div class="container">
+        <h1 class="align-center">Ajopäiväkirjan suodattaminen</h1>
+        <p>Jos et halua tarkastella koko ajopäiväkirjaa, voit hakea tietoja käyttämällä suodattimia. Valitse suodattimen arco ja rastita käytä. Jos suodatinta ei ole rastitettu, se ei vaikuta tuloksiin.</p>
+        <form action="/filteredDiary">
+            <table class="alignment-box">
+                <tr>
+                    <th>Suodatin</th>
+                    <th>Käytä</th>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="rekisterinumero">Rekisteri</label><br>
+                        <select class="input-field" name="rekisterinumero" id="rekisterinumero">
+                            {{#each registers}}
+                                <option value="{{rekisterinumero}}">{{rekisterinumero}}</option>        
+                            {{/each}}
+                        </select>
+                    </td>
+                    <td class="align-center">
+                        <input class="big-checkbox" type="checkbox" name="rekisterisuodatus" id="rekisterisuodatus">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tarkoitus">Ajon tarokoitus</label><br>
+                        <select class="input-field" name="tarkoitus" id="tarkoitus">
+                            {{#each reasons}}
+                            <option value="{{tarkoitus}}">{{tarkoitus}}</option>        
+                            {{/each}}
+                        </select>
+                    </td>
+                    <td class="align-center">
+                        <input class="big-checkbox" type="checkbox" name="tarkoitussuodatus" id="tarkoitussuodatus">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="nimi">Kuljettaja</label><br>
+                        <select class="input-field" name="nimi" id="nimi">
+                            {{#each drivers}}
+                                <option value="{{nimi}}">{{nimi}}</option>        
+                            {{/each}}
+                        </select>
+                    </td>
+                    <td class="align-center">
+                        <input class="big-checkbox" type="checkbox" name="kuljettajasuodatus" id="kuljettajasuodatus">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="alkaa">Alkaen</label><br>
+                        <input class="input-field" type="date" name="alkaa" id="alkaa"><br>
+                        <label for="loppuu">Päättyen</label><br>
+                        <input class="input-field" type="date" name="loppuu" id="loppuu">
+                    </td>
+                    <td class="align-center">
+                        <input class="big-checkbox" type="checkbox" name="ottosuodatus" id="ottosuodatus">
+                    </td>
+                </tr>
+            </table>
+            <input class="vapaana-btn" type="submit" value="Hea tiedot">
+        </form>
+    </div>
+</body>
