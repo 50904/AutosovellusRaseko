@@ -160,9 +160,13 @@ app.get('/filteredDiary', (req, res) => {
   }
 
   let whereClause = 'WHERE ' + conditions
+  let cleanwhereClause = ''
+  console.log(whereClause.endsWith(' AND '))
   console.log(whereClause.endsWith(' AND '))
   if (whereClause.endsWith(' AND ')) {
-    whereClause = whereClause.substring(-5)
+      let position = whereClause.lastIndexOf(' AND ')
+      cleanwhereClause = whereClause.substring(0, position)
+      console.log(position)
   }
 
   console.log(registerFilter)
