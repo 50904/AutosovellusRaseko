@@ -59,6 +59,19 @@ const selectQuery = async (sqlstatement) => {
 
 // APP SPECIFIC QUERIES
 // --------------------
+
+/** 
+* Returns web user data by email address
+* @param {string} values - Users email address 
+* @return {Promise} Returns a promise that resolves to the result set of the query.
+*/
+
+
+const getWebUserData = async (values) => {
+    let sqlstatement = 'SELECT * FROM webuser WHERE email = $1';    
+    let resultset = await pool.query(sqlstatement, values);
+    return resultset;
+}
 /** 
 * Get all current vehicles and their status.
 * @summary Reads vehicle information from view autojen_tila (vehicle status)
@@ -180,4 +193,4 @@ const convertToDateTimeObject = (timestamp) => {
 // ----------------
 
 // TODO: Export all functions and the pool itself. Jest needs the pool to run tests
-module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, runQueryWithValues, getLocationByReg, getVehicleData, convertToDateTimeObject};
+module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, runQueryWithValues, getLocationByReg, getVehicleData, convertToDateTimeObject, getWebUserData};

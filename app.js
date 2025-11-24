@@ -34,6 +34,9 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // URL ROUTES
 // ----------
 
@@ -42,11 +45,24 @@ app.get('/', (req, res) => {
   res.render('index')
 });
 
-app.get('/welcome', (req, res) => {
-  let user = req.query.user
-  res.render('welcome', {user: user})
-});
 
+app.post('/welcome', (req, res) => {
+      console.log('Login information', req.body)
+      let user = req.body.user;
+      let inputPassword = req.body.inputPassword;
+      let userRole = '';
+      let userPassword = '';
+      pgtools.getWebUserData([user]).then((resultset) => {
+          let userData = resultset.rows[0];
+          if (userData) {
+              console.log('Dataa saatiin:')
+          } else {
+              console.log('Ei tullut dataa')
+              res.render('invalidUserName', {user: user});
+          }
+          console.log('Database information', userData);
+          // res.render('welcome', userData);
+          });
 // Route to vehicle listing page: free vehicles and vehicles in use
 app.get('/vehiclelist', (req, res) => {
   pgtools.getVehicleData().then((resultset) => {
@@ -111,7 +127,7 @@ app.get('/filterDiary', (req, res) => {
   let reasonList = []
 
   // Fetch registernumber
-  pgtools.selectQuery('SELECT * FROM webrekisteri;').then((resultset) => {
+  pgtools.selectQuery('SELECT * FROM webrekisterit;').then((resultset) => {
     regitserList = resultset.rows
 
     // Fetch reason
@@ -147,16 +163,16 @@ app.get('/filteredDiary', (req, res) => {
   
   let conditions = ''
   if (registerFilterValid == 'on') {
-    conditions = conditions + 'rekisterinumero = ' + registerFilter + ' AND ';
+    conditions = conditions + `rekisterinumero = '${registerFilter}' AND `;
   }
   if (reasonFilterValid == 'on') {
-    conditions = conditions + 'tarkoitus = ' + reasonFilter + ' AND ';
+    conditions = conditions + `tarkoitus = '${reasonFilter}' AND `;
   }
   if (driverFilterValid == 'on') {
-    conditions = conditions + 'nimi = ' + driverFilter +  ' AND ';
+    conditions = conditions + `nimi = '${driverFilter}' AND `;
   }
   if (dateFilterValid == 'on') {
-    conditions = conditions + 'otto BETWEEN ' + startFilter + ' AND ' + endFilter;
+    conditions = conditions + `otto BETWEEN '${startFilter}' AND '${endFilter}'`;
   }
 
   let whereClause = 'WHERE ' + conditions
@@ -167,10 +183,10 @@ app.get('/filteredDiary', (req, res) => {
       cleanwhereClause = whereClause.substring(0, position)
       console.log(position)
   }
-
-  console.log(registerFilter)
-  console.log(registerFilterValid)
-  console.log(cleanwhereClause)
+  else {
+    cleanwhereClause = whereClause
+  }
+  console.log('Where clause is:', cleanwhereClause)
 })
 
 app.get('/formTest', (req, res) => {
@@ -185,4 +201,4 @@ app.get('/formTest', (req, res) => {
 // ------------
 
 app.listen(PORT);
-console.log(`Server started on port ${PORT}`);
+console.log(`Server started on port ${PORT}`)
