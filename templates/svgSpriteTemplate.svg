@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <symbol id="icon-name" viewBox="0 0 24 24">
+            {{/* SVG content goes here */}}
+        </symbol>
+        <symbol id="another-icon" viewBox="0 0 24 24">
+            {{/* Another SVG content goes here */}}
+    </symbol>   
+    </defs>
+</svg>  

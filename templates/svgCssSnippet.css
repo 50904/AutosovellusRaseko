@@ -1,0 +1,44 @@
+:root {
+    --icon-fill-color: none;
+    --icon-stroke-color: #000000;
+    --icon-stroke-width: 1px;
+    --icon-stroke-linecap: round;
+    --icon-stroke-linejoin: round;
+    --icon-background-color: transparent;
+}
+
+.image-normal-size {
+    width: 1em;
+    height: 1em;
+}
+
+.image-medium-size {
+    width: 2em;
+    height: 2em;
+}
+
+.image-large-size {
+    width: 3em;
+    height: 3em;
+}
+
+.image-extra-large-size {
+    width: 4em;
+    height: 4em;
+}
+
+.image-fill-red {
+    --icon-fill-color: red;
+}
+
+.image-fill-blue {
+    --icon-fill-color: blue;
+}   
+
+.image-stroke-green {
+    --icon-stroke-color: green;
+}
+
+.image-stroke-width-thick {
+    --icon-stroke-width: 2px;
+}

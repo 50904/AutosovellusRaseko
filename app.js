@@ -1,92 +1,188 @@
+// WEB APPLICATION FOR SERVING RASEKO'S VEHICLE LENDING DATABASE
+// =============================================================
+
+// LIBRARIES
+// =========
+
+// External libraries and modules
+// ------------------------------
+
 const express = require('express');
-const exphbs = require('express-handlebars');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-app.use(express.static('public'));
-
-// Handlebars-konfiguraatio
-app.engine('handlebars', exphbs.engine());
-app.set('view engine', 'handlebars');
-app.set('views', './views');
+const {engine} = require('express-handlebars');
 
 // Local libraries and modules
-// -------------------------
+// ---------------------------
 
 const pgtools = require('./postgres-tools');
 
-// Reitti etusivulle
+// INITIALIZATION
+// --------------
+
+// Create an express app
+const app = express();
+
+// Define a TCP port to listen: read en or use 8080 in undifined
+const PORT = process.env.PORT || 8080;
+
+// Set a folder for static files and images
+app.use(express.static('public'));
+app.use('/images', express.static('public/images'));
+app.use('/icons', express.static('public/icons'));
+
+// Set templating
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+// URL ROUTES
+// ----------
+
+// Route to home page
 app.get('/', (req, res) => {
-  res.render('home', { title: 'Tervetuloa Express & Handlebars -sovellukseen!' });
+  res.render('index')
 });
 
-// Test route
-app.get('/test', (req, res) => {
-  const data = {'testKey': 'hiihoo'};
-  pgtools.selectQuery('SELECT * FROM public.vapaana').then((resultset) => {
-    console.log(resultset.rows);
-  })
-  res.render('test', data);
+app.get('/welcome', (req, res) => {
+  let user = req.query.user
+  res.render('welcome', {user: user})
 });
 
-// Reitit kaikille Handlebars-sivuille
-app.get('/about', (req, res) => {
-  res.render('about', { title: 'Tietoa sovelluksesta', description: 'Tämä on testisivu sovelluksen tiedoille.', author: 'AutosovellusRaseko-tiimi' });
+// Route to vehicle listing page: free vehicles and vehicles in use
+app.get('/vehiclelist', (req, res) => {
+  pgtools.getVehicleData().then((resultset) => {
+    // Lets give a key for the resultset and render it to the page
+    res.render('vehicleList', { vehicleList: resultset.rows })
+  });
 });
 
+// Route to individual vehicle page: select vehicle by register number
+app.get('/vehicleDetails', (req, res) => {
+  let register = req.query.register;
+    pgtools.getVehicleDetails([register]).then((resultset) => {
+
+      // Convert time stamp to user friendly string
+      let userFriendlyTimestamp = pgtools.convertToDateTimeObject(resultset.rows[0].otto);
+      let dateTimeValue = userFriendlyTimestamp.date + ' kello ' + userFriendlyTimestamp.time
+      
+      // Change original timestamp to string value
+      resultset.rows[0].otto = dateTimeValue;
+
+      // Render it to the page
+      res.render('vehicleDetails', resultset.rows[0])
+    });
+});
+
+// Route to diary containing all vehicles
 app.get('/diary', (req, res) => {
-  res.render('diary', { title: 'diary', entries: [
-    { date: '2025-09-17', distance: 120, driver: 'Matti' },
-    { date: '2025-09-16', distance: 85, driver: 'Maija' }
-  ] });
+    pgtools.getDiary().then((resultset) => {
+        // Lets give a key for the resultset and render it to the page
+        let rows = resultset.rows;
+        let row = 0
+        let formattedTake = {}
+        let formattedReturn = {}
+        for (row in rows) {
+            if (rows[row].otto == null) {
+                formattedTake.date = '-'
+                formattedTake.time = '-'
+            }
+            else {
+            formattedTake = pgtools.convertToDateTimeObject(rows[row].otto)
+            }
+
+             if (rows[row].palautus == null) {
+                formattedReturn.date = '-'
+                formattedReturn.time = '-'
+            }
+            else {
+            formattedReturn = pgtools.convertToDateTimeObject(rows[row].palautus);
+            }
+            
+            rows[row].otto = formattedTake.date + ' kello ' + formattedTake.time;
+            rows[row].palautus = formattedReturn.date + ' kello ' + formattedReturn.time;
+        }
+        res.render('diary', {diaryData: rows})
+    })
 });
 
-app.get('/dbtest', (req, res) => {
-  res.render('dbtest', { title: 'Tietokantatesti', dbStatus: 'Yhteys OK', testValue: 42 });
+app.get('/filterDiary', (req, res) => {
+  let options = {}
+  let regitserList = []
+  let driverList = []
+  let reasonList = []
+
+  // Fetch registernumber
+  pgtools.selectQuery('SELECT * FROM webrekisteri;').then((resultset) => {
+    regitserList = resultset.rows
+
+    // Fetch reason
+    pgtools.selectQuery('SELECT * FROM webtarkoitukset;').then((resultset) => {
+      reasonList = resultset.rows
+
+      // Fetch driver
+      pgtools.selectQuery('SELECT * FROM webkuljettajat;').then((resultset) => {
+        driverList = resultset.rows
+
+        // options
+        options = {
+          registers: regitserList,
+          reasons: reasonList,
+          drivers: driverList
+        };
+      res.render('filterDiary', options)
+      })
+    })
+  })
 });
 
-app.get('/form', (req, res) => {
-  res.render('form', { title: 'Lomake', fields: ['Nimi', 'Sähköposti', 'Viesti'] });
-});
+app.get('/filteredDiary', (req, res) => {
+  let registerFilter = req.query.rekisterinumero
+  let registerFilterValid = req.query.rekisterisuodatus
+  let reasonFilter = req.query.tarkoitus
+  let reasonFilterValid = req.query.tarkoitussuodatus
+  let driverFilter = req.query.nimi
+  let driverFilterValid = req.query.kuljettajasuodatus
+  let startFilter = req.query.alkaa
+  let endFilter = req.query.loppuu
+  let dateFilterValid = req.query.ottosuodatus
+  
+  let conditions = ''
+  if (registerFilterValid == 'on') {
+    conditions = conditions + 'rekisterinumero = ' + registerFilter + ' AND ';
+  }
+  if (reasonFilterValid == 'on') {
+    conditions = conditions + 'tarkoitus = ' + reasonFilter + ' AND ';
+  }
+  if (driverFilterValid == 'on') {
+    conditions = conditions + 'nimi = ' + driverFilter +  ' AND ';
+  }
+  if (dateFilterValid == 'on') {
+    conditions = conditions + 'otto BETWEEN ' + startFilter + ' AND ' + endFilter;
+  }
 
-app.get('/images', (req, res) => {
-  res.render('images', { title: 'Kuvat', images: ['kuva1.jpg', 'kuva2.jpg', 'kuva3.jpg'] });
-});
+  let whereClause = 'WHERE ' + conditions
+  let cleanwhereClause = ''
+  console.log(whereClause.endsWith(' AND '))
+  if (whereClause.endsWith(' AND ')) {
+      let position = whereClause.lastIndexOf(' AND ')
+      cleanwhereClause = whereClause.substring(0, position)
+      console.log(position)
+  }
 
-app.get('/index', (req, res) => {
-  res.render('index', { title: 'Etusivu', welcome: 'Tervetuloa testietusivulle!' });
-});
+  console.log(registerFilter)
+  console.log(registerFilterValid)
+  console.log(cleanwhereClause)
+})
 
-app.get('/locate', (req, res) => {
-  res.render('locate', { title: 'Sijainti', location: { lat: 60.5, lng: 22.3 } });
-});
+app.get('/formTest', (req, res) => {
+  res.render('formTest')
+})
 
-app.get('/signin', (req, res) => {
-  res.render('signin', { title: 'Kirjaudu sisään', username: 'testikäyttäjä' });
-});
+// TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
 
-app.get('/vehicle', (req, res) => {
-  res.render('vehicle', { title: 'Ajoneuvot', vehicles: [
-    { reg: 'FNK-129', model: 'Toyota Corolla' },
-    { reg: 'FPB-343', model: 'Volkswagen Golf' }
-  ] });
-});
+// TODO: Route to vehicle's tracking page: location by register number
 
-app.get('/vehicledetails-FNK-129', (req, res) => {
-  res.render('vehicledetails-FNK-129', { title: 'Ajoneuvon tiedot FNK-129', details: { reg: 'FNK-129', model: 'Toyota Corolla', year: 2020 } });
-});
+// SERVER START
+// ------------
 
-app.get('/vehicledetails-FPB-343', (req, res) => {
-  res.render('vehicledetails-FPB-343', { title: 'Ajoneuvon tiedot FPB-343', details: { reg: 'FPB-343', model: 'Volkswagen Golf', year: 2019 } });
-});
-
-app.get('/vehicledetails-OXZ-915', (req, res) => {
-  res.render('vehicledetails-OXZ-915', { title: 'Ajoneuvon tiedot OXZ-915', details: { reg: 'OXZ-915', model: 'Ford Focus', year: 2018 } });
-});
-
-app.get('/vehicledetails', (req, res) => {
-  res.render('vehicledetails', { title: 'Ajoneuvon tiedot', details: { reg: 'ABC-123', model: 'Testiauto', year: 2025 } });
-});
-app.listen(PORT, () => {
-  console.log(`Serveri käynnissä portissa ${PORT}`);
-});
+app.listen(PORT);
+console.log(`Server started on port ${PORT}`);
