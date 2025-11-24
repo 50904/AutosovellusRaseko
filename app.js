@@ -162,7 +162,6 @@ app.get('/filteredDiary', (req, res) => {
   let whereClause = 'WHERE ' + conditions
   let cleanwhereClause = ''
   console.log(whereClause.endsWith(' AND '))
-  console.log(whereClause.endsWith(' AND '))
   if (whereClause.endsWith(' AND ')) {
       let position = whereClause.lastIndexOf(' AND ')
       cleanwhereClause = whereClause.substring(0, position)
@@ -171,7 +170,7 @@ app.get('/filteredDiary', (req, res) => {
 
   console.log(registerFilter)
   console.log(registerFilterValid)
-  console.log(whereClause)
+  console.log(cleanwhereClause)
 })
 
 app.get('/formTest', (req, res) => {
