@@ -27,6 +27,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
+    "express-session": "^1.18.2",
     "pg": "^8.16.3",
     "pg-pool": "^3.10.1"
   }
