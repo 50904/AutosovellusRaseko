@@ -8,12 +8,13 @@
 // ------------------
 const express = require('express');
 const {engine} = require('express-handlebars');
+const session = require('express-session');
 
 // Local libraries and modules
 // ---------------------------
 
 const pgtools =  require('./postgres-tools');
-const { on } = require('pg-pool');
+
 // INITIALIZATION
 // --------------
 
@@ -26,7 +27,18 @@ const PORT = process.env.PORT || 8080
 // Set a folders for static files like css, images or icons
 app.use(express.static('public'));
 app.use('/images', express.static('public/images'));
-app.use('/icons', express.static('public/icons'))
+app.use('/icons', express.static('public/icons'));
+
+// Setup session settings 
+app.use(session({
+  secret: 'hippopotamus on virtahepo', // Signing passphrase for cookies
+  resave: false, // Unmodified sessions will not be saved
+  saveUninitialized: false, // Unmodified new sessions will not be saved
+  cookie: {
+    maxAge: 600000 // Max lifetime for the cookie in ms, 10 minutes
+  }
+
+}));
 
 // Setup templating
 app.engine('handlebars', engine());
@@ -49,33 +61,65 @@ app.get('/', (req, res) => {
 });
 
 app.post('/welcome', (req, res) => {
+
+    // Collect login data from body
     console.log('Login information', req.body)
-    let user = req.body.user;
-    let inputPassword = req.body.inputPassword;
+    let inputEmail = req.body.user;
+    let inputPassword = req.body.password;
+
+    // Get session data
+    let sessionData = req.session;
+    console.log(sessionData)
+
+    // Define variables for users Role and Stored password
     let userRole = '';
     let userPassword = '';
-    pgtools.getWebUserData([user]).then((resultset) => {
+
+    // Get user data from database using given email address
+    pgtools.getWebUserData([inputEmail]).then((resultset) => {
         let userData = resultset.rows[0];
+        
+        // Check if query returns anything
         if (userData) {
-            console.log('Dataa saatiin');
-            res.render('welcome', {user: user, role: userData.user_role})
+
+            // Parse user information from resultset to avoid timing conflicts
+            userEmail = userData.email;
+            userRole = userData.user_role;
+            userPassword = userData.password;
+
+            // Check if given password matches stored password
+            if (inputPassword == userPassword) {
+
+                // Success 
+                sessionData.user = {role: userRole}
+                res.render('welcome', {user: inputEmail, role: userRole})
+            }
+            else {
+                
+                res.render('invalidPassword');
+            }
+            
         } else {
-            console.log('Ei tullu dataa');
-            res.render('invalidUserName', {user: user})
+            
+            res.render('invalidUserName', {user: inputEmail});
         }
-        console.log('Database information', userData);
-        //res.render('welcome', {user: user, role: userData.user_role})
-     
-    
-    
-})
+      
+    })
 })
 // Route to vehicle listing page: free vehicles and vehicles in use
 app.get('/vehiclelist', (req, res) => {
-    pgtools.getVehicleData().then((resultset) => {
+    userRole = req.session.user;
+    console.log(userRole)
+    if (userRole) {
+        pgtools.getVehicleData().then((resultset) => {
         // Lets give a key for the resultset and render it to the page
         res.render('vehiclelist', {vehicleList: resultset.rows});
+        
     })
+    } else {
+        res.render('notAuthorized');
+    }
+    
 })
 
 // Route to individual vehicle page: select vehicle by register number
@@ -133,10 +177,27 @@ app.get('/diary', (req, res) => {
 });
 
 app.get('/filterDiary', (req, res) => {
-    let options = {}
-    let registerList = []
-    let driverList = []
-    let reasonList = []
+
+    // Set user role to none
+    let userRole = 'none';
+    
+    // Read session data
+    console.log(req.session);
+    if (req.session.user) {
+        userRole = req.session.user.role;
+    }
+
+    if (userRole == 'opettaja' || userRole == 'hallinto') {
+        
+    } else {
+        res.render('notAuthorized');
+    }
+
+    // Set query parameters
+    let options = {};
+    let registerList = [];
+    let driverList = [];
+    let reasonList = [];
 
     pgtools.selectQuery('SELECT * FROM webrekisterit;').then((resultset) => {
         registerList = resultset.rows;
