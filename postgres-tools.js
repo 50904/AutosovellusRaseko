@@ -53,7 +53,9 @@ const selectQuery = async (sqlstatement) => {
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
-// TODO:Update data with SQL statement
+
+
+// TODO: Update data with SQL statement
 
 // TODO:Delete data with SQL statement
 
@@ -61,25 +63,24 @@ const selectQuery = async (sqlstatement) => {
 // --------------------
 
 /** 
-* Returns web user data by email address
-* @param {string} values - Users email address 
+* Returns web users data by email address.
+* @param {string} values - Users email address
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
-
 const getWebUserData = async (values) => {
-    let sqlstatement = 'SELECT * FROM webuser WHERE email = $1';    
-    let resultset = await pool.query(sqlstatement, values);
-    return resultset;
+    let sqlstatement = 'SELECT * FROM webuser WHERE email = $1';
+    let resulset = await pool.query(sqlstatement, values);
+    return resulset;
 }
 /** 
 * Get all current vehicles and their status.
-* @summary Reads vehicle information from view web_autojen_tila (vehicle status)
+* @summary Reads vehicle information from view web_autojen_tila (vehicle status).
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
 const getVehicleData = async () => {
-    let sqlstatement = 'SELECT * FROM public.web_autojen_tila';
+    let sqlstatement = 'Select * FROM public.web_autojen_tila';
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
@@ -155,15 +156,16 @@ const getDiary = async () => {
 }
 /** 
 * Get diary by register number.
-* @summary Returns diary of a vehicle identified by it's register number.
-* @param {Array} register Registernumber in string array format.
+* @summary Returns diary of a vehicle identified by it's register numger.
+* @param {Array} register Registernumber in string array format .
 * @return {Promise} Rows from ajopaivakirja view (diary)
 */
 
 const getVehicleDiary = async (register) => {
-    let sqlstatement = 'SELECT * from public.ajopaivakirja WHERE rekisterinumero = $1';
+    let sqlstatement = 'SELECT * from public.webajot_lt WHERE rekisterinumero = $1'
     let resultset = await pool.query(sqlstatement, register);
     return resultset;
+
 }
 // Location page - location by register number -> create a view for this
 
@@ -182,10 +184,11 @@ const getLocationByReg = async (values) => {
 }
 
 /** 
-* Converts PostgreSQL timestamp to user frinedly string format.
-* @param {timestamp} timestamp - Timestamp to be converted to string format.
+* Converts PostgreSQL timestamp to user friendly string format.
+* @param {timestamp} timestamp - Timestamp to be converted to string format
 * @return {object} Object containing date and time as string.
 */
+
 const convertToDateTimeObject = (timestamp) => {
     let isoTimestamp = timestamp.toISOString();
     let splittedISOTimestamp = isoTimestamp.split('T');
@@ -195,30 +198,6 @@ const convertToDateTimeObject = (timestamp) => {
     };
     return result;
 }
-
-/**
- * Format a timestamp (Date or timestamp string) into Finnish date/time string.
- * Examples: "29.9.2025 klo 11:18:08" or "29.9.2025 11:18:08" depending on options.
- * @param {Date|string} ts - JavaScript Date object or an ISO timestamp string
- * @param {Object} [opts] - Options: {useKlo: boolean} default true uses 'klo' between date and time
- * @return {string} Formatted Finnish date/time string
- */
-const formatFinnishTimestamp = (ts, opts = { useKlo: true }) => {
-    let dateObj;
-    if (!ts) return '';
-    if (ts instanceof Date) dateObj = ts;
-    else dateObj = new Date(ts);
-    if (Number.isNaN(dateObj.getTime())) return '';
-
-    // Use toLocaleString with fi-FI to get localized formatting then tweak
-    // Use options to force numeric components
-    const datePart = dateObj.toLocaleDateString('fi-FI'); // e.g. 29.9.2025
-    const timePart = dateObj.toLocaleTimeString('fi-FI', { hour12: false }); // e.g. 11.18.08
-
-    if (opts.useKlo) return `${datePart} klo ${timePart}`;
-    return `${datePart} ${timePart}`;
-}
-
 /*selectQuery('SELECT * FROM jest_test').then((resultset) => {
     console.log(resultset.rows)
 })
@@ -227,4 +206,4 @@ const formatFinnishTimestamp = (ts, opts = { useKlo: true }) => {
 // ----------------
 
 // TODO: Export all functions and the pool itself. Jest needs the pool to run tests
-module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, getVehicleDiary, runQueryWithValues, getLocationByReg, getVehicleData, convertToDateTimeObject, getWebUserData};
+module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, getVehicleDiary, runQueryWithValues, getLocationByReg, getVehicleData,  convertToDateTimeObject, getWebUserData};
