@@ -74,13 +74,12 @@ const getWebUserData = async (values) => {
 }
 /** 
 * Get all current vehicles and their status.
-* @summary Reads vehicle information from view autojen_tila (vehicle status)
-* @async
+* @summary Reads vehicle information from view web_autojen_tila (vehicle status)
 * @return {Promise} Returns a promise that resolves to the result set of the query.
 */
 
 const getVehicleData = async () => {
-    let sqlstatement = 'SELECT * FROM public.autojen_tila';
+    let sqlstatement = 'SELECT * FROM public.web_autojen_tila';
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
@@ -154,6 +153,18 @@ const getDiary = async () => {
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
+/** 
+* Get diary by register number.
+* @summary Returns diary of a vehicle identified by it's register number.
+* @param {Array} register Registernumber in string array format.
+* @return {Promise} Rows from ajopaivakirja view (diary)
+*/
+
+const getVehicleDiary = async (register) => {
+    let sqlstatement = 'SELECT * from public.ajopaivakirja WHERE rekisterinumero = $1';
+    let resultset = await pool.query(sqlstatement, register);
+    return resultset;
+}
 // Location page - location by register number -> create a view for this
 
 /** 
@@ -185,6 +196,29 @@ const convertToDateTimeObject = (timestamp) => {
     return result;
 }
 
+/**
+ * Format a timestamp (Date or timestamp string) into Finnish date/time string.
+ * Examples: "29.9.2025 klo 11:18:08" or "29.9.2025 11:18:08" depending on options.
+ * @param {Date|string} ts - JavaScript Date object or an ISO timestamp string
+ * @param {Object} [opts] - Options: {useKlo: boolean} default true uses 'klo' between date and time
+ * @return {string} Formatted Finnish date/time string
+ */
+const formatFinnishTimestamp = (ts, opts = { useKlo: true }) => {
+    let dateObj;
+    if (!ts) return '';
+    if (ts instanceof Date) dateObj = ts;
+    else dateObj = new Date(ts);
+    if (Number.isNaN(dateObj.getTime())) return '';
+
+    // Use toLocaleString with fi-FI to get localized formatting then tweak
+    // Use options to force numeric components
+    const datePart = dateObj.toLocaleDateString('fi-FI'); // e.g. 29.9.2025
+    const timePart = dateObj.toLocaleTimeString('fi-FI', { hour12: false }); // e.g. 11.18.08
+
+    if (opts.useKlo) return `${datePart} klo ${timePart}`;
+    return `${datePart} ${timePart}`;
+}
+
 /*selectQuery('SELECT * FROM jest_test').then((resultset) => {
     console.log(resultset.rows)
 })
@@ -193,4 +227,4 @@ const convertToDateTimeObject = (timestamp) => {
 // ----------------
 
 // TODO: Export all functions and the pool itself. Jest needs the pool to run tests
-module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, runQueryWithValues, getLocationByReg, getVehicleData, convertToDateTimeObject, getWebUserData};
+module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, getVehicleDiary, runQueryWithValues, getLocationByReg, getVehicleData, convertToDateTimeObject, getWebUserData};

@@ -1,6 +1,6 @@
 <div class="container">
-    <h1>Kaikki ajot</h1>
-    <p>Seuraavasta taulukosta näkyy kaikkien autojen ajot</p>
+    <h1>Auton kaikki ajot</h1>
+    <p>Seuraavasta taulukosta näkyy valitsemasi auton kaikki ajot</p>
 
     <table>
         <tr>
@@ -10,12 +10,12 @@
             <th>Paluu</th>
         </tr>
         {{#each diaryData}}
-        <tr>
-            <td>{{rekisterinumero}}</td>
-            <td>{{etunimi}} {{sukunimi}}</td>
+        <tr class="tr-highlighted">
+            
+            <td>{{nimi}}</td>
             <td>{{tarkoitus}}</td>
-            <td>{{otto}}</td>
-            <td>{{palautus}}</td>
+            <td>{{otettu}}</td>
+            <td>{{palautettu}}</td>
         </tr>
         {{/each}}
     </table>
