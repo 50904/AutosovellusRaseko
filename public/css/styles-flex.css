@@ -113,7 +113,7 @@ p {
 
 .vehicle-detail-image {
     /* Set image size relative to viewport width (4 columns)*/
-    width: 80vw;
+    max-width: 75%;
     height: auto;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -262,15 +262,20 @@ table {
 .raseko-btn {
 
     display: block;
-    margin: 0 auto;
+    margin: 40px;
     background-color: var(--color-raseko-dark-blue);
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 10px 30px;
     text-align: center;
     text-decoration: none !important;
     font-size: 24px;
+}
+
+.hilite-text {
+    font-weight: bold;
+    color: var(--color-raseko-pink);
 }
 
 .big-checkbox {

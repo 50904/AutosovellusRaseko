@@ -9,9 +9,20 @@
         <div class="card"-{{status}}><img class="vehicle-image" src="/images/{{rekisterinumero}}.png" />
             <div class="card-body">
                 <h4 class="card-title">{{rekisterinumero}}  <br>{{status}}</h4>
-                <p class="card-text">{{merkki}} {{malli}}<br />henkilömäärä {{henkilomaara}}<br />automaatti {{automaatti}}</p>
-                    {{!-- add link to individual and style it as a button --}}
+                <p class="card-text">{{merkki}} {{malli}}<br />henkilömäärä {{henkilomaara}}<br />
+                {{#if automaatti}}
+                automaattivaihteet
+                {{else}}
+                manuaalivaihteet
+                {{/if}}
+                </p>
+                    
+
+                    {{#if ajossa}}
                     <a class="{{status}}-btn" href="/vehicleDetails?register={{rekisterinumero}}">Näytä</a>
+                    {{else}}
+                    <a class="{{status}}-btn" href="/vehicleDiary?register={{rekisterinumero}}">Näytä</a>
+                    {{/if}}
             </div>
         </div>
         {{/each}}

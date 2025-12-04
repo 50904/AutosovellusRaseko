@@ -1,18 +1,16 @@
 <div class="container">
-    <h1>Kaikki ajot</h1>
-    <p>Seuraavasta taulukosta näkyy kaikkien autojen ajot</p>
-
+    <h1 class="align-center">Auton kaikki ajot</h1>
+    <p class="align-center">Seuraavasta taulukosta näkyy valitsemasi auton kaikki ajot</p>
+    <div class="alignment-box">
     <table>
         <tr>
-            <th>Auto</th>
             <th>Kuljettaja</th>
             <th>Tarkoitus</th>
             <th>Lähtö</th>
             <th>Paluu</th>
         </tr>
         {{#each diaryData}}
-        <tr class="tr-highlighted">
-            <td>{{rekisterinumero}}</td>
+        <tr class="tr-highlighted">    
             <td>{{nimi}}</td>
             <td>{{tarkoitus}}</td>
             <td>{{otettu}}</td>
@@ -20,4 +18,5 @@
         </tr>
         {{/each}}
     </table>
+    </div>
 </div>

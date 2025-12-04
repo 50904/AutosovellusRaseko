@@ -1,6 +1,11 @@
 {{!-- Page for checking authentication data --}}
 <body>
     <div class="container">
-        <h1>Tervetuloa RASEKON ajoneuvojärjestelmään</h1>
-        {{user}}
+        <div class="align-center">
+            <h1>Tervetuloa RASEKO:n ajoneuvojärjestelmään</h1>
+            <h2>{{user}}</h2>
+            <h2>Sinulla on {{role}}-rooli järjestelmässä</h2>
+            <a class="raseko-btn" href="/vehiclelist">Jatka</a>
+        </div>
+    </div>
 </body>
