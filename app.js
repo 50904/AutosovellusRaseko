@@ -51,10 +51,6 @@ app.use(express.urlencoded({extended: true}))
 // URL ROUTES
 // ----------
 
-app.get('/formTest', (req,res) => {
-    res.render('formTest')
-});
-
 // Route to home page
 app.get('/', (req, res) => {
     res.render('index')
