@@ -35,7 +35,7 @@ app.use(session({
   resave: false, // Unmodified sessions will not be saved
   saveUninitialized: false, // Unmodified new sessions will not be saved
   cookie: {
-    maxAge: 600000 // Max lifetime for the cookie in ms, 10 minutes
+    maxAge: 1800000 // Max lifetime for the cookie in ms, 30 minutes
   }
 
 }));
@@ -51,6 +51,10 @@ app.use(express.urlencoded({extended: true}))
 // URL ROUTES
 // ----------
 
+// Route for testing menus
+app.get('/menu', (req, res) => {
+    res.render('menu')
+});
 // Route to home page
 app.get('/', (req, res) => {
     res.render('index')

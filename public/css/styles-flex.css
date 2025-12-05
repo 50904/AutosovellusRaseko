@@ -11,7 +11,7 @@
     --color-info-box-bg: #cfd1d5;
     --shadow-raseko-dark-blue: rgba(27, 51, 89, 0.3);
     --shadow-raseko-pink: rgb(232, 32, 112, 0.3);
-    --color-raseko-highlilghter: rgba(75, 188, 197, 0.3);
+    --color-raseko-highlighter: rgba(75, 188, 197, 0.2);
 }
 /* Set size to follow parent's size */
 * {
@@ -37,12 +37,13 @@ p {
 /* Common settings for Containers*/
 .container {
     width: 80%;
-    height: auto;
+    height: fit-content;
     margin: auto;
     overflow: auto;
     padding: 20px;
     background: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    /* Adjust width for smaller screens */
     @media (max-width: 600px) {
         width: 100%;
     }
@@ -113,7 +114,7 @@ p {
 
 .vehicle-detail-image {
     /* Set image size relative to viewport width (4 columns)*/
-    max-width: 75%;
+    max-width: 75vw;
     height: auto;
     border-radius: 5px;
     margin-bottom: 15px;
@@ -219,10 +220,10 @@ p {
     border-spacing: 30px;
 }
 
+
 .big-text {
     font-size: 3em;
 }
-
 th {
     padding: 10px;
     font-size: small;
@@ -235,42 +236,36 @@ td {
     padding: 10px;
     font-size: small;
     color: var(--color-raseko-dark-blue);
+    
     border: 1px solid var(--color-raseko-dark-blue);
 }
-
 tr:nth-child(even) {
-    background-color: var(--color-info-box-bg);
+    background-color: var(--color-raseko-grey);
 }
 
-tr:hover {
-    background-color: var(--color-raseko-highlilghter);
+.tr-highlighted:hover {
+    background-color: var(--color-raseko-highlighter); 
 }
 
 table {
     width: auto;
     border-collapse: collapse;
-    padding: 10px;
 }
 
 .input-field {
-    font-family: Arial, sans-serif;
-    font-size: larger;
-    margin-bottom: 10px;
-    margin-top: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    margin-bottom: 20px;
 }
 
-.raseko-btn {
-
-    display: block;
-    margin: 40px;
-    background-color: var(--color-raseko-dark-blue);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 30px;
-    text-align: center;
+.raseko-button {
+    font-size: larger;
     text-decoration: none !important;
-    font-size: 24px;
+    color: var(--color-raseko-grey);
+    background-color: var(--color-raseko-dark-blue);
+    border-radius: 5px;
+    margin: 40px;
+    padding: 10px 30px;
 }
 
 .hilite-text {
@@ -279,10 +274,73 @@ table {
 }
 
 .big-checkbox {
-    /* transform: scale(2); */
-    width: 20px;
-    height: 20px;
-    padding: 10px;
+ width: 20px;
+ height: 20px;
+}
+.menu-bar {
+    flex-grow: 1;
+    background-color: var(--color-raseko-dark-blue);
+    color: var(--color-raseko-grey);
+    font-size:30px;
+    padding-left: 20px
+}
+.menu-bar-item {
+    cursor: pointer !important;
+}
+/* The Overlay (background) */
+.overlay {
+  /* Height & width depends on how you want to reveal the overlay (see JS below) */   
+  height: 100%;
+  width: 0;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  background-color:var(--color-raseko-dark-blue); /* Raseko dark blue */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  position: relative;
+  top: 25%; /* 25% from the top */
+  width: 100%; /* 100% width */
+  text-align: center; /* Centered text/links */
+  margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+}
+
+/* The navigation links inside the overlay */
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: var(--color-raseko-grey);
+  display: block; /* Display block instead of inline */
+  transition: 0.3s; /* Transition effects on hover (color) */
+}
+
+/* When you mouse over the navigation links, change their color */
+.overlay a:hover, .overlay a:focus {
+  color: var(--color-raseko-light-blue);
+}
+
+/* Position the close button (top right corner) */
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+}
+
+/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
 }
 
 /* Responsive adjustments for small screens*/
@@ -291,4 +349,3 @@ table {
         flex: 100%;
     } 
 }
-    

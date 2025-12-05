@@ -1,23 +1,26 @@
-<div class="container">
-    <h1>Hakuehdot täyttävät ajot</h1>
-    <p>Seuraavasta taulukosta näkyy ajot valitsemillasi ehdoilla</p>
+<body>
+    {{> menu }}
+    <div class="container">
+        <h1>Hakuehdot täyttävät ajot</h1>
+        <p>Seuraavasta taulukosta näkyy ajot valitsemillasi ehdoilla</p>
 
-    <table>
-        <tr>
-            <th>Auto</th>
-            <th>Kuljettaja</th>
-            <th>Tarkoitus</th>
-            <th>Lähtö</th>
-            <th>Paluu</th>
-        </tr>
-        {{#each diaryData}}
-        <tr class="tr-highlighted">
-            <td>{{rekisterinumero}}</td>
-            <td>{{nimi}}</td>
-            <td>{{tarkoitus}}</td>
-            <td>{{otettu}}</td>
-            <td>{{palautettu}}</td>
-        </tr>
-        {{/each}}
-    </table>
-</div>
+        <table>
+            <tr>
+                <th>Auto</th>
+                <th>Kuljettaja</th>
+                <th>Tarkoitus</th>
+                <th>Lähtö</th>
+                <th>Paluu</th>
+            </tr>
+            {{#each diaryData}}
+            <tr class="tr-highlighted">
+                <td>{{rekisterinumero}}</td>
+                <td>{{nimi}}</td>
+                <td>{{tarkoitus}}</td>
+                <td>{{otettu}}</td>
+                <td>{{palautettu}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</body>
