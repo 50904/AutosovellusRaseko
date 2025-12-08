@@ -272,6 +272,18 @@ app.get('/filteredDiary', (req, res) => {
         res.render('notSignedIn')
     }
 })
+
+// Route to sign out page
+app.get('/signOut', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            res.render('signOutError');
+        } else {
+            res.render('signOutSuccess');
+        }
+
+    });
+})
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
 
 // TODO: Route to vehicle's tracking page: location by register number
