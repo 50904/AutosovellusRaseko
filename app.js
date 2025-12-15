@@ -303,6 +303,11 @@ app.get('/signOut', (req, res) => {
 
     });
 })
+
+app.get('/api/meaningOfLife', (req, res) => {
+    const something = {"explation": "42"}
+    res.json(something);
+})
 // TODO: Route to vehicle's diary page: all entries for individual vehicle by register number
 
 // TODO: Route to vehicle's tracking page: location by register number
