@@ -163,6 +163,20 @@ const getDiary = async () => {
     let resultset = await pool.query(sqlstatement);
     return resultset;
 }
+
+/** 
+* Get vehicle diaries from database.
+* @summary Returns all rows from view ajopaivakirja_verottaja (diary).
+* @async
+* @return {Promise} Returns a promise that resolves to the result set of the query.
+*/
+
+const getTaxDiary = async () => { 
+    let sqlstatement = 'SELECT * from public.ajopaivakirja_verottaja';
+    let resultset = await pool.query(sqlstatement);
+    return resultset;
+}
+
 /** 
 * Get diary by register number.
 * @summary Returns diary of a vehicle identified by it's register numger.
@@ -215,4 +229,4 @@ const convertToDateTimeObject = (timestamp) => {
 // ----------------
 
 // TODO: Export all functions and the pool itself. Jest needs the pool to run tests
-module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, getVehicleDiary, runQueryWithValues, getLocationByReg, getVehicleData,  convertToDateTimeObject, getWebUserData};
+module.exports = {pool, insertQuery, selectQuery, getFreeVehicles, getVehiclesInUse, getVehicleDetails, getDiary, getTaxDiary,getVehicleDiary, runQueryWithValues, getLocationByReg, getVehicleData,  convertToDateTimeObject, getWebUserData};

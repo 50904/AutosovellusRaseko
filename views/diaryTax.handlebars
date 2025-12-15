@@ -1,0 +1,44 @@
+<body>
+    {{> menu }}
+    <div class="container">
+        <h1>Ajotiedot verottajalle</h1>
+        <p>Seuraavasta taulukosta näkyvät kaikkien autojen yksityiskohtaiset ajotiedot</p>
+
+        <table>
+            <tr>
+                <th>Auto</th>
+                <th>Otettu</th>
+                <th>Palautettu</th>
+                <th>Hetu</th>
+                <th>Etunimi</th>
+                <th>Sukunimi</th>
+                <th>Tarkoitus</th>
+                <th>Mistä</th>
+                <th>Mihin</th>
+                <th>km</th>
+                <th>MM alussa</th>
+                <th>MM lopussa</th>
+                <th>Ajossa (h)</th>
+                <th>Seisonnassa (h)</th>
+            </tr>
+            {{#each diaryData}}
+            <tr class="tr-highlighted">
+                <td>{{rekisterinumero}}</td>
+                <td>{{lainaus}}</td>
+                <td>{{palautus}}</td>
+                <td>{{hetu}}</td>
+                <td>{{etunimi}}</td>
+                <td>{{sukunimi}}</td>
+                <td>{{tarkoitus}}</td>
+                <td>{{mista}}</td>
+                <td>{{mihin}}</td>
+                <td>{{km}}</td>
+                <td>{{mma}}</td>
+                <td>{{mml}}</td>
+                <td>{{ajossa}}</td>
+                <td>{{seisonnassa}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</body>

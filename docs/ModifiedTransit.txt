@@ -1,0 +1,22 @@
+lahto_osoite	lahtomittari	tarkoitus	paluuosoite	paluumittari	km	lainaus	palautus	a_aika	p_aika
+EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3398	Varaosien nouto	EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3417	19,48800087	2025-01-07 09:41	2025-01-07 10:16	0,583333333	23,1
+EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3417	Varaosien nouto	Piilipuunkatu 4, 21200 Raisio, FIN	3422	4,508999825	2025-01-08 09:22	2025-01-08 09:32	0,166666667	0,033333333
+Piilipuunkatu 4, 21200 Raisio, FIN	3422	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3426	4,675000191	2025-01-08 09:35	2025-01-08 09:47	0,2	24,4
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3426	Varaosien nouto	Vajossuonkatu 7b, 20360 Turku, FIN	3436	9,786000252	2025-01-09 10:12	2025-01-09 10:25	0,216666667	0,033333333
+Vajossuonkatu 7, 20360 Turku, FIN	3436	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3446	9,352999687	2025-01-09 10:27	2025-01-09 10:41	0,216666667	0,633333333
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3446	Varaosien nouto	Kuninkaanv‰yl‰ 22, 20320 Raisio, FIN	3451	5,400000095	2025-01-09 11:19	2025-01-09 11:31	0,183333333	0,1
+Kuninkaanv‰yl‰ 22, 20320 Raisio, FIN	3451	Varaosien nouto	EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3456	5,037000179	2025-01-09 11:38	2025-01-09 11:46	0,116666667	0,75
+EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3456	Varaosien nouto	Alhaistentie 6, 21200 Raisio, FIN	3457	1,054999948	2025-01-09 12:31	2025-01-09 12:36	0,066666667	0,133333333
+Alhaistentie 6, 21200 Raisio, FIN	3457	Varaosien nouto	Martinkatu 2a, 21200 Raisio, FIN	3458	1,172000051	2025-01-09 12:44	2025-01-09 12:50	0,083333333	0,016666667
+Martinkatu 2, 21200 Raisio, FIN	3458	Varaosien nouto	EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3459	1,231999993	2025-01-09 12:51	2025-01-09 12:57	0,083333333	22,16666667
+EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3459	Varaosien nouto	Raisiontori 11, 21200 Raisio, FIN	3461	1,363000035	2025-01-10 11:08	2025-01-10 11:13	0,083333333	0,116666667
+Raisiontori 11, 21200 Raisio, FIN	3461	Varaosien nouto	EK3, K‰ps‰nkatu 6, 21200 Raisio, FIN	3462	1,467000008	2025-01-10 11:21	2025-01-10 11:26	0,083333333	70,25
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3462	Varaosien nouto	Tammikuja 4, 21260 Raisio, FIN	3467	4,683000088	2025-01-13 09:41	2025-01-13 09:51	0,166666667	0,016666667
+Tammikuja 4, 21260 Raisio, FIN	3467	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3471	4,074999809	2025-01-13 09:53	2025-01-13 10:04	0,166666667	1,2
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3471	Varaosien nouto	Kirkkov‰‰rtinkuja 2, 21200 Raisio, FIN	3472	1,126000047	2025-01-13 11:17	2025-01-13 11:22	0,083333333	0,383333333
+Kirkkov‰‰rtinkuja 2, 21200 Raisio, FIN	3472	Varaosien nouto	Peltopohjankatu 34, 21280 Raisio, FIN	3475	2,424000025	2025-01-13 11:45	2025-01-13 11:54	0,133333333	0,05
+Peltopohjankatu 34, 21280 Raisio, FIN	3475	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3478	3,631000042	2025-01-13 11:58	2025-01-13 12:08	0,166666667	0,116666667
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3478	Varaosien nouto	Raisiontie 93, 21280 Raisio, FIN	3481	2,377000093	2025-01-13 12:15	2025-01-13 12:25	0,15	0,2
+Raisiontie 93, 21280 Raisio, FIN	3481	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3483	2,420000076	2025-01-13 12:37	2025-01-13 12:46	0,15	1,016666667
+EK3, Eeronkuja 3, 21200 Raisio, FIN	3483	Varaosien nouto	Nikkarinkatu 3, 21280 Raisio, FIN	3487	4,291999817	2025-01-13 13:48	2025-01-13 14:00	0,183333333	0,3
+Nikkarinkatu 3, 21280 Raisio, FIN	3487	Varaosien nouto	EK3, Eeronkuja 3, 21200 Raisio, FIN	3492	4,461999893	2025-01-13 14:18	2025-01-13 14:30	0,183333333	67,56666667

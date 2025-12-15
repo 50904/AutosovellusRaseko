@@ -273,6 +273,25 @@ app.get('/filteredDiary', (req, res) => {
     }
 })
 
+// Route to diary containing all vehicle data tax administration
+app.get('/diaryTax', (req, res) => {
+
+    let user = req.session.user;
+    if (user) {
+        if (user.role == 'hallinto') {
+            pgtools.getTaxDiary().then((resultset) => {
+                // Lets give a key for the resultset and render it to the page
+                res.render('diaryTax', {diaryData: resultset.rows})
+            })
+        } else {
+            res.render('notAuthorized');
+        }
+    } else {
+        res.render('notSignedIn');
+    }
+    
+});
+
 // Route to sign out page
 app.get('/signOut', (req, res) => {
     req.session.destroy((err) => {
