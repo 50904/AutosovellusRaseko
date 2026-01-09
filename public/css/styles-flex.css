@@ -12,7 +12,9 @@
     --shadow-raseko-dark-blue: rgba(27, 51, 89, 0.3);
     --shadow-raseko-pink: rgb(232, 32, 112, 0.3);
     --color-raseko-highlighter: rgba(75, 188, 197, 0.2);
+
 }
+
 /* Set size to follow parent's size */
 * {
     box-sizing: border-box;
@@ -58,6 +60,11 @@ p {
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.more-room {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 
@@ -277,6 +284,41 @@ table {
  width: 20px;
  height: 20px;
 }
+
+/* Scale imge according to its parent element */
+.scaled-image {
+  width: inherit;
+}
+
+/* A style for headings above maps */
+.modern-header {
+    font-size: 3rem;
+    text-align: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: var(--color-map-heading-bright);
+}
+
+.big-list {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: x-large;
+}
+
+.olive-heading {
+  color: var(--color-map-headings);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: xx-large;
+  text-decoration: underline;
+}
+/* Setting to render map correctly */
+.map-frame {
+  height: 80vh; /* It's essential to define map height */
+  z-index: 0; /* Prevent maps to be drawn on top of menubar */
+}
+/* A style for hiding elements containing data for popups */
+.not-visible {
+    display: none;
+}
+
 .menu-bar {
     flex-grow: 1;
     background-color: var(--color-raseko-dark-blue);
