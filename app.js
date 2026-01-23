@@ -306,7 +306,7 @@ app.get('/signOut', (req, res) => {
 
 // TODO: Muunna käyttämään oikeaa dataa fleet management sovelluksesta
 app.get('/api/vehiclePositionData', (req, res) => {
-
+    console.log(req.query)
     register = req.query.register
 
     // Example data as JavaScript object from external source
@@ -334,7 +334,10 @@ app.get('/api/vehicleTrackData', (req, res) => {
 })
 
 // TODO: Route to vehicle's tracking page: location by register number
-app.get('/vehiclePosition')
+app.get('/vehiclePosition', (req,res) => {
+    let vehicleData = {register: req.query.register}
+    res.render('vehiclePosition', vehicleData)
+})
 
 // TODO: Route to vehicles's tracking page: track by register number
 app.get('/vehicleTrack')

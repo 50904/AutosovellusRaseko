@@ -4,30 +4,46 @@
     </div>
     <div class="container">
         <div id="map">
-            <h1 class="modern-header">Auton {{rekisteri}} sijainti</h1>
+            <h1 id="register" class="modern-header">{{register}}</h1>
 
             {{!-- It is very important to define height for the map and give a id for it --}}
             <div class="map-frame" id="mapid"></div>
 
             <script>
-                // Initialize the map and set its view to the specified coordinates and zoom level
-                let rasekomap = L.map('mapid').setView([{{lat}}, {{lon}}], 16);
+                // Async funktion to get data from server API
+                const loadJsonData = async() => {
+                    let queryRegister = document.getElementById('register').innerHTML
+                    let apicall = 'api/vehiclePositionData?register=' + queryRegister
+                    const response = await fetch(apicall);
+                    const jsonData = await response.json();
 
-                // Add a tile layer to the map (OpenStreetMap tiles)
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-                    maxZoom: 19,
-                }).addTo(rasekomap);
+                    // Convert it back to object
+                    const data = await JSON.parse(jsonData);
 
-                // Add a marker at the specified coordinates
-                let marker = L.marker([{{lat}}, {{lon}}]).addTo(rasekomap);
+                    // Get individual properties
+                    let latitude = data.lat;
+                    let longitude = data.lon;
+                    let register = data.rekister;
 
-                // Popup for the marker
-                // If data is sent directly to popup, it will handel it as name of variable
-                // Building ID is read from invisible elements in the begining of the page using getElementById method
-                // It can also be translated into strin using `{{buildingId}}`-form
-                let info = document.getElementById('bid')
-                marker.bindPopup(info).openPopup();
+                    // Initialize the map and set its view to the specified coordinates and zoom level
+                    let rasekomap = L.map('mapid').setView([latitude, longitude], 16);
+
+                    // Add a tile layer to the map (OpenStreetMap tiles)
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+                        maxZoom: 19,
+                    }).addTo(rasekomap);
+
+                    // Add a marker at the specified coordinates
+                    let marker = L.marker([latitude, longitude]).addTo(rasekomap);
+
+                    // Set the popup text
+                    let info = dokument.getElementById('register').innetHTML
+                    marker.bindPopup(info)
+                }
+
+                // Call the function 
+                loadJsonData();
             </script>
         </div>
     </div>
