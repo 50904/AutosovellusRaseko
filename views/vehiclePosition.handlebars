@@ -12,8 +12,10 @@
             <script>
                 // Async funktion to get data from server API
                 const loadJsonData = async() => {
-                    let queryRegister = document.getElementById('register').innerHTML
-                    let apicall = 'api/vehiclePositionData?register=' + queryRegister
+                    let queryRegister = document.getElementById('register').innerHTML;
+                    let apicall = 'api/vehiclePositionData?register=' + queryRegister;
+                   
+                    // Use function to get data from server API                   
                     const response = await fetch(apicall);
                     const jsonData = await response.json();
 
