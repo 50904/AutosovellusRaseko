@@ -1,29 +1,28 @@
 <body>
 
-<div id="hamburgerNav" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <div class="overlay-content">
-    <a href="/diary">Ajopäiväkirjat</a>
-    <a href="/filterDiary">Ajopäiväkirjahaku</a>
-    <a href="/vehiclelist">Autojen tila</a>
-    <a href="/diaryTax">Verottajan tiedot</a>
-    <a href="/signOut">Kirjaudu ulos</a>
+  <div id="hamburgerNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="overlay-content">
+      <a href="/diary">Ajopäiväkirjat</a>
+      <a href="/filterDiary">Ajopäiväkirjahaku</a>
+      <a href="/vehiclelist">Autojen tila</a>
+      <a href="/diaryTax">Verottajan tiedot</a>
+      <a href="/signOut">Kirjaudu ulos</a>
+    </div>
   </div>
-</div>
 
-
-<div class="menu-bar">
+  <div class="menu-bar">
     <span class="menu-bar-item" onclick="openNav()">&#9776; autolainaus </span> 
+  </div>
 
+  <script>
+    function openNav() {
+      document.getElementById("hamburgerNav").style.width = "100%";
+    }
 
-</div>
-<script>
-function openNav() {
-  document.getElementById("hamburgerNav").style.width = "100%";
-}
+    function closeNav() {
+      document.getElementById("hamburgerNav").style.width = "0%";
+    } 
+  </script>
 
-function closeNav() {
-  document.getElementById("hamburgerNav").style.width = "0%";
-} 
-</script>
 </body>
