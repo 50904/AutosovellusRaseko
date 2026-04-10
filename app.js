@@ -37,7 +37,6 @@ app.use(session({
   cookie: {
     maxAge: 1800000 // Max lifetime for the cookie in ms, 30 minutes
   }
-
 }));
 
 // Setup templating
@@ -55,11 +54,12 @@ app.use(express.urlencoded({extended: true}))
 app.get('/menu', (req, res) => {
     res.render('menu')
 });
-// Route to home page
+// Route to home page: login
 app.get('/', (req, res) => {
     res.render('index')
 });
 
+// Route to welcome page: compare credentials given at login against the database
 app.post('/welcome', (req, res) => {
 
     // Collect login data from body
@@ -88,33 +88,34 @@ app.post('/welcome', (req, res) => {
             // Check if given password matches stored password
             if (inputPassword == userPassword) {
 
-                // Success 
+                // Success updated session data and render welcome page
+                // Session data contains property user and has only userRolse as value
+                // It is possible to store more user data by defining more key-value-pairs
                 sessionData.user = {role: userRole}
                 res.render('welcome', {user: inputEmail, role: userRole})
             }
+
             else {
-                
+                // Invalid password, render error page
                 res.render('invalidPassword');
             }
-            
+
         } else {
-            
+            //  Invalid email address, render error page
             res.render('invalidUserName', {user: inputEmail});
         }
-      
     })
 })
 // Route to vehicle listing page: free vehicles and vehicles in use
 app.get('/vehiclelist', (req, res) => {
     let userRole = req.session.user;
+
     if (userRole) {
         pgtools.getVehicleData().then((resultset) => {
             let vehicleData = resultset.rows;
 
-
         // Lets give a key for the resultset and render it to the page
-        res.render('vehiclelist', {vehicleList: resultset.rows});
-        
+        res.render('vehiclelist', {vehicleList: resultset.rows}); 
     })
     } else {
         res.render('notAuthorized');
@@ -126,17 +127,18 @@ app.get('/vehiclelist', (req, res) => {
 app.get('/vehicleDetails', (req, res) => {
         let register = req.query.register;
         let user = req.session.user;
+        
         if (user) {
             if (user.role == 'opettaja' || user.role == 'hallinto') {
                 pgtools.getVehicleDetails([register]).then((resultset) => {
-
+                    
                     // Render it to the page
                     res.render('vehicleDetails', resultset.rows[0]);
-
                 })
             } else {
                 res.render('notAuthorized');
             }
+
         } else {
             res.render('notSignedIn');
         }
@@ -146,11 +148,11 @@ app.get('/vehicleDetails', (req, res) => {
 app.get('/vehicleDiary', (req, res) => {
     let register = req.query.register;
     let user = req.session.user;
+
         if (user) {
             if (user.role == 'opettaja' || user.role == 'hallinto') {
                 pgtools.getVehicleDiary([register]).then((resultset) => {
                 res.render('vehicleDiary', {diaryData: resultset.rows})
-
                 })
             } else {
                 res.render('notAuthorized');
@@ -306,7 +308,6 @@ app.get('/signOut', (req, res) => {
 
 // // TODO: Muunna käyttämään oikeaa dataa fleet management sovelluksesta
 app.get('/api/vehiclePositionData', (req, res) => {
-
     register = req.query.register
     console.log(register)
 
