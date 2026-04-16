@@ -10,10 +10,13 @@ const express = require('express');
 const {engine} = require('express-handlebars');
 const session = require('express-session');
 
+require('dotenv').config();
+
 // Local libraries and modules
 // ---------------------------
 
-const pgtools =  require('./postgres-tools');
+const pgtools = require('./postgres-tools');
+const { route } = require('express/lib/application');
 
 // INITIALIZATION
 // --------------
@@ -329,6 +332,67 @@ app.get('/vehiclePosition', (req,res) => {
     let vehicleData = {register: req.query.register}
     res.render('vehiclePosition', vehicleData)
 })
+
+// TODO: Käytä tätä fetchiä, tällä saadaan dataa API avainta käyttäen. Vaihda .env tiedostossa olevien muuttujien nimeä, vastaamaan alla oleviin muuttujiin (API_KEY)(API_BASE_URL) jos tarve. Laita myös ylempien vehiclePosition kommentteihin.
+
+// Route to vehicle's tarcking page with API call: location by deviceId
+app.get('/api/deviceRoutes', async (req, res) => {
+    const { deviceId, startTime, endTime } = req.query;
+
+    const apiKey = process.env.API_KEY;
+    const baseUrl = process.env.API_BASE_URL;
+
+    const url = `${baseUrl}/public/api/devices/routes/nopoints/${deviceId}/${startTime}/${endTime}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${apiKey}`
+            }
+        });
+
+        // Set the json data in to variable
+        const data = await response.json();
+
+        // Loop through the array and create simplified object
+        const simplified = data.map(route => ({
+            deviceId: route.deviceId,
+
+            // Start position object
+            routeStartPosition: {
+                houseno: route.routeStartPosition?.houseno,
+                street: route.routeStartPosition?.street,
+                city: route.routeStartPosition?.city
+            },
+
+            // Stop position object
+            routeStopPosition: {
+                houseno: route.routeStopPosition?.houseno,
+                street: route.routeStopPosition?.street,
+                city: route.routeStopPosition?.city
+            },
+
+            // Points object
+            points: (route.points || []).map(point => ({
+                lat: point.lat,
+                lon: point.lon,
+                timestamp: point.timestamp,
+                timest: point.timest
+            })),
+
+            // Drive start and end timestamp with timezone objects
+            driveStartTimest: route.driveStartTimest,
+            driveStopTimest: route.driveStopTimest
+        }));
+
+        // Send final resutl as JSON back to browser
+        res.json(simplified);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error fetching data');
+    }
+});
 
 // SERVER START
 // ------------
