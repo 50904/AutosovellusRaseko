@@ -12,7 +12,15 @@
     --shadow-raseko-dark-blue: rgba(27, 51, 89, 0.3);
     --shadow-raseko-pink: rgb(232, 32, 112, 0.3);
     --color-raseko-highlighter: rgba(75, 188, 197, 0.2);
-
+    --color-map-light-green: #CBFACC;
+    --color-map-dark-green: #ADD19E;
+    --color-map-light-olive: #C8D7AB;
+    --color-map-dark-olive: #B0BE93;
+    --color-map-light-yellow: #FFFFE5;
+    --color-map-light-grey: #EEEEEE;
+    --color-map-dark-grey: #D9D0C9;
+    --color-map-headings: #759269;
+    --color-map-heading-bright: #6D955D;
 }
 
 /* Set size to follow parent's size */
@@ -63,9 +71,11 @@ p {
 }
 
 .more-room {
-    padding-top: 20px;
+    padding-top: 40px;
     padding-bottom: 20px;
+    
 }
+
 
 
 /* Card layout for vehicle list */
@@ -296,6 +306,7 @@ table {
     text-align: center;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: var(--color-map-heading-bright);
+
 }
 
 .big-list {
@@ -309,11 +320,13 @@ table {
   font-size: xx-large;
   text-decoration: underline;
 }
+
 /* Setting to render map correctly */
 .map-frame {
   height: 80vh; /* It's essential to define map height */
   z-index: 0; /* Prevent maps to be drawn on top of menubar */
 }
+
 /* A style for hiding elements containing data for popups */
 .not-visible {
     display: none;
