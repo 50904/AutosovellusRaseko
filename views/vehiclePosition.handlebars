@@ -10,15 +10,6 @@
             <div class="map-frame" id="mapid"></div>
 
             <script>
-                const formatAddress = (position) => {
-                    if (!position) {
-                        return 'Ei tietoja';
-                    }
-
-                    const parts = [position.street, position.houseno, position.city].filter(Boolean);
-                    return parts.join(', ');
-                };
-
                 const formatDateTime = (value) => {
                     if (!value) {
                         return 'Ei tietoja';
@@ -27,66 +18,47 @@
                     return new Date(value).toLocaleString('fi-FI');
                 };
 
-                const loadRouteData = async () => {
+                const loadLocationData = async () => {
                     const params = new URLSearchParams(window.location.search);
                     const register = document.getElementById('register').innerHTML.trim();
                     const deviceId = params.get('deviceId') || register;
 
-                    const now = new Date();
-                    const startDefault = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-                    const endDefault = now.toISOString();
-
-                    const startTime = params.get('startTime') || startDefault;
-                    const endTime = params.get('endTime') || endDefault;
-
-                    const apicall = '/api/deviceRoutes?deviceId=' + encodeURIComponent(deviceId) + '&startTime=' + encodeURIComponent(startTime) + '&endTime=' + encodeURIComponent(endTime);
-                    const response = await fetch(apicall);
+                    const response = await fetch('/api/deviceLocation?deviceId=' + encodeURIComponent(deviceId));
 
                     if (!response.ok) {
                         const errorText = await response.text();
-                        document.getElementById('routeInfo').innerHTML = '<p>API-kutsu epäonnistui: ' + response.status + '</p><pre>' + errorText + '</pre>';
+                        document.getElementById('routeInfo').innerHTML = '<p>Paikannushaku epäonnistui: ' + response.status + '</p><pre>' + errorText + '</pre>';
                         return;
                     }
 
-                    const routes = await response.json();
-                    const route = Array.isArray(routes) ? routes[0] : routes;
+                    const location = await response.json();
 
-                    if (!route) {
-                        document.getElementById('routeInfo').innerHTML = '<p>Reittitietoja ei löytynyt.</p>';
+                    if (!location || location.lat == null || location.lon == null) {
+                        document.getElementById('routeInfo').innerHTML = '<p>Sijaintitietoja ei löytynyt.</p>';
                         return;
                     }
 
                     document.getElementById('routeInfo').innerHTML = `
                         <div class="drive-information">
-                            <p><strong>Lähtöosoite:</strong> ${formatAddress(route.routeStartPosition)}</p>
-                            <p><strong>Paluuosoite:</strong> ${formatAddress(route.routeStopPosition)}</p>
-                            <p><strong>Lähtöaika:</strong> ${formatDateTime(route.driveStartTimest)}</p>
-                            <p><strong>Paluuaika:</strong> ${formatDateTime(route.driveStopTimest)}</p>
+                            <p><strong>Ajoneuvo:</strong> ${location.deviceName || register}</p>
+                            <p><strong>Leveysaste:</strong> ${location.lat}</p>
+                            <p><strong>Pituusaste:</strong> ${location.lon}</p>
+                            <p><strong>Aikaleima:</strong> ${formatDateTime(location.timestamp)}</p>
+                            <p><strong>Nimetty paikka:</strong> ${(location.namedLocations || []).map(item => item.name).filter(Boolean).join(', ') || 'Ei nimettyä paikkaa'}</p>
                         </div>
                     `;
 
-                    const points = Array.isArray(route.points) ? route.points.filter(point => point.lat != null && point.lon != null) : [];
-
-                    if (!points.length) {
-                        return;
-                    }
-
-                    const mapPoints = points.map(point => [point.lat, point.lon]);
-                    const rasekomap = L.map('mapid').setView(mapPoints[0], 16);
+                    const rasekomap = L.map('mapid').setView([location.lat, location.lon], 16);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
                         maxZoom: 19,
                     }).addTo(rasekomap);
 
-                    const routeLine = L.polyline(mapPoints, { color: '#0b5cab', weight: 4 }).addTo(rasekomap);
-                    rasekomap.fitBounds(routeLine.getBounds());
-
-                    L.marker(mapPoints[0]).addTo(rasekomap).bindPopup('Lähtö');
-                    L.marker(mapPoints[mapPoints.length - 1]).addTo(rasekomap).bindPopup('Paluu');
+                    L.marker([location.lat, location.lon]).addTo(rasekomap).bindPopup(location.deviceName || register).openPopup();
                 };
 
-                loadRouteData();
+                loadLocationData();
             </script>
         </div>
     </div>

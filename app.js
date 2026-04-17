@@ -400,18 +400,13 @@ const resolveDeviceIdByRegister = async (inputIdOrRegister, baseUrl, apiKey) => 
     return match?.deviceId || match?.id || match?.uuid || match?.identifier || inputIdOrRegister;
 };
 
-// External API proxy for route data.
-// Returns start/stop address data and timestamps for the selected route.
-app.get('/api/deviceRoutes', async (req, res) => {
+// External API proxy for current device location.
+const handleDeviceLocationRequest = async (req, res) => {
     const inputIdOrRegister = req.query.deviceId || req.query.register;
-    const now = new Date();
-    const startTime = req.query.startTime || new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-    const endTime = req.query.endTime || now.toISOString();
     const apiKeyRaw = process.env.API_KEY;
     const apiKey = (apiKeyRaw || '').trim().replace(/^['\"]|['\"]$/g, '');
     const baseUrl = process.env.API_BASE_URL;
     const authHeaderName = process.env.API_AUTH_HEADER || 'API_KEY';
-    const authScheme = process.env.API_AUTH_SCHEME || '';
 
     if (!inputIdOrRegister) {
         return res.status(400).json({ error: 'Missing deviceId parameter' });
@@ -423,15 +418,13 @@ app.get('/api/deviceRoutes', async (req, res) => {
 
     try {
         const deviceId = await resolveDeviceIdByRegister(inputIdOrRegister, baseUrl, apiKey);
-        const url = `${baseUrl}/public/api/devices/routes/nopoints/${encodeURIComponent(deviceId)}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`;
-
-        const headers = {
-            ...getApiHeaders(apiKey),
-            [authHeaderName]: authScheme ? (apiKey.startsWith(`${authScheme} `) ? apiKey : `${authScheme} ${apiKey}`) : apiKey
-        };
+        const url = `${baseUrl}/public/api/devices/location/${encodeURIComponent(deviceId)}`;
 
         const response = await fetch(url, {
-            headers
+            headers: {
+                ...getApiHeaders(apiKey),
+                [authHeaderName]: apiKey
+            }
         });
 
         if (!response.ok) {
@@ -450,38 +443,26 @@ app.get('/api/deviceRoutes', async (req, res) => {
         }
 
         const data = await response.json();
-        const routes = Array.isArray(data) ? data : Array.isArray(data.routes) ? data.routes : Array.isArray(data.data) ? data.data : [];
-
-        const simplified = routes.map(route => ({
-            deviceId: route.deviceId,
-            routeStartPosition: {
-                houseno: route.routeStartPosition?.houseno,
-                street: route.routeStartPosition?.street,
-                city: route.routeStartPosition?.city
-            },
-            routeStopPosition: {
-                houseno: route.routeStopPosition?.houseno,
-                street: route.routeStopPosition?.street,
-                city: route.routeStopPosition?.city
-            },
-            points: Array.isArray(route.points)
-                ? route.points.map(point => ({
-                    lat: point.lat,
-                    lon: point.lon,
-                    timestamp: point.timestamp,
-                    timest: point.timest
-                }))
-                : [],
-            driveStartTimest: route.driveStartTimest,
-            driveStopTimest: route.driveStopTimest
-        }));
-
-        res.json(simplified);
+        res.json({
+            deviceId: data.deviceId,
+            deviceName: data.deviceName || data.name,
+            lat: data.lat,
+            lon: data.lon,
+            speed: data.speed,
+            heading: data.heading,
+            timestamp: data.timestamp,
+            timest: data.timest,
+            namedLocations: Array.isArray(data.namedLocations) ? data.namedLocations : []
+        });
     } catch (error) {
         console.error('Fetch error:', error);
         res.status(500).json({ error: 'Error fetching data' });
     }
-});
+};
+
+app.get('/api/deviceLocation', handleDeviceLocationRequest);
+app.get('/api/deviceRoutes', handleDeviceLocationRequest);
+
 // SERVER START
 // ------------
 app.listen(PORT)
