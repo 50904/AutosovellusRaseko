@@ -309,77 +309,177 @@ app.get('/signOut', (req, res) => {
     });
 })
 
-// // TODO: Muunna käyttämään oikeaa dataa fleet management sovelluksesta
-app.get('/api/vehiclePositionData', (req, res) => {
-    register = req.query.register
-    console.log(register)
+// TODO: Muunna käyttämään oikeaa dataa fleet management sovelluksesta.
+// TODO: Käytä .env muuttujia API_KEY ja API_BASE_URL (tai API_URL) API-kutsun asetuksiin.
+// app.get('/api/vehiclePositionData', (req, res) => {
+//     register = req.query.register
+//     console.log(register)
 
-    // Example data as JavaScript object from external source
-    let data = {lat: 60.4786,
-                lon: 22.1636,
-                register: register
+//     // Example data as JavaScript object from external source
+//     let data = {lat: 60.4786,
+//                 lon: 22.1636,
+//                 register: register
+//     }
+
+//     // Convert data to JSON 
+//     let jsonData = JSON.stringify(data)
+    
+//     // Send JSON-data as response
+//     res.json(jsonData);
+// })
+
+// TODO: Route to vehicle's tracking page: location by register number.
+// TODO: Kytke näkymä käyttämään API-dataa (/api/deviceRoutes tai /api/vehiclePositionData),
+// TODO: jolloin API_KEY ja API_BASE_URL ovat käytössä myös vehiclePosition-reitityksen yhteydessä.
+// app.get('/vehiclePosition', (req,res) => {
+//     let vehicleData = {register: req.query.register}
+//     res.render('vehiclePosition', vehicleData)
+// })
+
+// Route to vehicle tracking page.
+// The page loads route data through the external API proxy below.
+app.get('/vehiclePosition', (req, res) => {
+    const { register, deviceId, startTime, endTime } = req.query;
+    res.render('vehiclePosition', { register, deviceId, startTime, endTime });
+});
+
+// Cache for device list to avoid calling the external API on every request.
+let deviceListCache = {
+    expiresAt: 0,
+    data: []
+};
+
+const getApiHeaders = (apiKey) => {
+    return {
+        API_KEY: apiKey,
+        Accept: '*/*'
+    };
+};
+
+const getDevicesFromApi = async (baseUrl, apiKey) => {
+    const now = Date.now();
+    if (deviceListCache.expiresAt > now && Array.isArray(deviceListCache.data) && deviceListCache.data.length > 0) {
+        return deviceListCache.data;
     }
 
-    // Convert data to JSON 
-    let jsonData = JSON.stringify(data)
-    
-    // Send JSON-data as response
-    res.json(jsonData);
-})
+    const devicesResponse = await fetch(`${baseUrl}/public/api/devices/all`, {
+        headers: getApiHeaders(apiKey)
+    });
 
-// TODO: Route to vehicle's tracking page: location by register number
-app.get('/vehiclePosition', (req,res) => {
-    let vehicleData = {register: req.query.register}
-    res.render('vehiclePosition', vehicleData)
-})
+    if (!devicesResponse.ok) {
+        const body = await devicesResponse.text();
+        throw new Error(`Device list fetch failed: ${devicesResponse.status} ${body}`);
+    }
 
-// TODO: Käytä tätä fetchiä, tällä saadaan dataa API avainta käyttäen. Vaihda .env tiedostossa olevien muuttujien nimeä, vastaamaan alla oleviin muuttujiin (API_KEY)(API_BASE_URL) jos tarve. Laita myös ylempien vehiclePosition kommentteihin.
+    const devices = await devicesResponse.json();
+    deviceListCache = {
+        // Cache 5 minutes
+        expiresAt: now + 5 * 60 * 1000,
+        data: Array.isArray(devices) ? devices : []
+    };
 
-// Route to vehicle's tarcking page with API call: location by deviceId
+    return deviceListCache.data;
+};
+
+const resolveDeviceIdByRegister = async (inputIdOrRegister, baseUrl, apiKey) => {
+    if (!inputIdOrRegister) {
+        return inputIdOrRegister;
+    }
+
+    const normalizedInput = inputIdOrRegister.trim().toUpperCase();
+    const devices = await getDevicesFromApi(baseUrl, apiKey);
+
+    const match = devices.find((device) => {
+        const fields = device?.fleetManagementFields || {};
+        const licensePlate = String(fields.licensePlate || '').trim().toUpperCase();
+        const registernumber = String(fields.registernumber || '').trim().toUpperCase();
+        return licensePlate === normalizedInput || registernumber === normalizedInput;
+    });
+
+    // Common id keys seen in tracking APIs. Prefer explicit IDs over names.
+    return match?.deviceId || match?.id || match?.uuid || match?.identifier || inputIdOrRegister;
+};
+
+// External API proxy for route data.
+// Returns start/stop address data and timestamps for the selected route.
 app.get('/api/deviceRoutes', async (req, res) => {
-    const { deviceId, startTime, endTime } = req.query;
-    const apiKey = process.env.API_KEY;
+    const inputIdOrRegister = req.query.deviceId || req.query.register;
+    const now = new Date();
+    const startTime = req.query.startTime || new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+    const endTime = req.query.endTime || now.toISOString();
+    const apiKeyRaw = process.env.API_KEY;
+    const apiKey = (apiKeyRaw || '').trim().replace(/^['\"]|['\"]$/g, '');
     const baseUrl = process.env.API_BASE_URL;
-    const url = `${baseUrl}/public/api/devices/routes/nopoints/${deviceId}/${startTime}/${endTime}`;
+    const authHeaderName = process.env.API_AUTH_HEADER || 'API_KEY';
+    const authScheme = process.env.API_AUTH_SCHEME || '';
+
+    if (!inputIdOrRegister) {
+        return res.status(400).json({ error: 'Missing deviceId parameter' });
+    }
+
+    if (!apiKey || !baseUrl) {
+        return res.status(500).json({ error: 'Missing API configuration' });
+    }
+
     try {
+        const deviceId = await resolveDeviceIdByRegister(inputIdOrRegister, baseUrl, apiKey);
+        const url = `${baseUrl}/public/api/devices/routes/nopoints/${encodeURIComponent(deviceId)}/${encodeURIComponent(startTime)}/${encodeURIComponent(endTime)}`;
+
+        const headers = {
+            ...getApiHeaders(apiKey),
+            [authHeaderName]: authScheme ? (apiKey.startsWith(`${authScheme} `) ? apiKey : `${authScheme} ${apiKey}`) : apiKey
+        };
+
         const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${apiKey}`
-            }
+            headers
         });
-        // Set the json data in to variable
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error('API error:', response.status, response.statusText, errorBody);
+
+            if (response.status === 401) {
+                return res.status(401).json({
+                    error: 'Unauthorized from external API',
+                    hint: 'Verify API_KEY and auth settings (API_AUTH_HEADER/API_AUTH_SCHEME).',
+                    upstream: errorBody
+                });
+            }
+
+            return res.status(response.status).json({ error: 'Error fetching data from API', upstream: errorBody });
+        }
+
         const data = await response.json();
-        // Loop through the array and create simplified object
-        const simplified = data.map(route => ({
+        const routes = Array.isArray(data) ? data : Array.isArray(data.routes) ? data.routes : Array.isArray(data.data) ? data.data : [];
+
+        const simplified = routes.map(route => ({
             deviceId: route.deviceId,
-            // Start position object
             routeStartPosition: {
                 houseno: route.routeStartPosition?.houseno,
                 street: route.routeStartPosition?.street,
                 city: route.routeStartPosition?.city
             },
-            // Stop position object
             routeStopPosition: {
                 houseno: route.routeStopPosition?.houseno,
                 street: route.routeStopPosition?.street,
                 city: route.routeStopPosition?.city
             },
-            // Points object
-            points: (route.points || []).map(point => ({
-                lat: point.lat,
-                lon: point.lon,
-                timestamp: point.timestamp,
-                timest: point.timest
-            })),
-            // Drive start and end timestamp with timezone objects
+            points: Array.isArray(route.points)
+                ? route.points.map(point => ({
+                    lat: point.lat,
+                    lon: point.lon,
+                    timestamp: point.timestamp,
+                    timest: point.timest
+                }))
+                : [],
             driveStartTimest: route.driveStartTimest,
             driveStopTimest: route.driveStopTimest
         }));
-        // Send final resutl as JSON back to browser
+
         res.json(simplified);
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error fetching data');
+        console.error('Fetch error:', error);
+        res.status(500).json({ error: 'Error fetching data' });
     }
 });
 // SERVER START

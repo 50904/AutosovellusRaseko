@@ -4,46 +4,89 @@
         <div id="map">
             <h1 id="register" class="modern-header">{{register}}</h1>
 
+            <div id="routeInfo" class="alignment-box"></div>
+
             {{!-- It is very important to define height for the map and give a id for it --}}
             <div class="map-frame" id="mapid"></div>
 
             <script>
-                // Async funktion to get data from server API
-                const loadJsonData = async() => {
-                    let queryRegister = document.getElementById('register').innerHTML;
-                    let apicall = 'api/vehiclePositionData?register=' + queryRegister;
-                   
-                    // Use function to get data from server API                   
+                const formatAddress = (position) => {
+                    if (!position) {
+                        return 'Ei tietoja';
+                    }
+
+                    const parts = [position.street, position.houseno, position.city].filter(Boolean);
+                    return parts.join(', ');
+                };
+
+                const formatDateTime = (value) => {
+                    if (!value) {
+                        return 'Ei tietoja';
+                    }
+
+                    return new Date(value).toLocaleString('fi-FI');
+                };
+
+                const loadRouteData = async () => {
+                    const params = new URLSearchParams(window.location.search);
+                    const register = document.getElementById('register').innerHTML.trim();
+                    const deviceId = params.get('deviceId') || register;
+
+                    const now = new Date();
+                    const startDefault = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+                    const endDefault = now.toISOString();
+
+                    const startTime = params.get('startTime') || startDefault;
+                    const endTime = params.get('endTime') || endDefault;
+
+                    const apicall = '/api/deviceRoutes?deviceId=' + encodeURIComponent(deviceId) + '&startTime=' + encodeURIComponent(startTime) + '&endTime=' + encodeURIComponent(endTime);
                     const response = await fetch(apicall);
-                    const jsonData = await response.json();
 
-                    // Convert it back to object
-                    const data = await JSON.parse(jsonData);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        document.getElementById('routeInfo').innerHTML = '<p>API-kutsu epäonnistui: ' + response.status + '</p><pre>' + errorText + '</pre>';
+                        return;
+                    }
 
-                    // Get individual properties
-                    let latitude = data.lat;
-                    let longitude = data.lon;
-                    let register = data.register;
+                    const routes = await response.json();
+                    const route = Array.isArray(routes) ? routes[0] : routes;
 
-                    // Initialize the map and set its view to the specified coordinates and zoom level
-                    let rasekomap = L.map('mapid').setView([latitude, longitude], 16);
+                    if (!route) {
+                        document.getElementById('routeInfo').innerHTML = '<p>Reittitietoja ei löytynyt.</p>';
+                        return;
+                    }
 
-                    // Add a tile layer to the map (OpenStreetMap tiles)
+                    document.getElementById('routeInfo').innerHTML = `
+                        <div class="drive-information">
+                            <p><strong>Lähtöosoite:</strong> ${formatAddress(route.routeStartPosition)}</p>
+                            <p><strong>Paluuosoite:</strong> ${formatAddress(route.routeStopPosition)}</p>
+                            <p><strong>Lähtöaika:</strong> ${formatDateTime(route.driveStartTimest)}</p>
+                            <p><strong>Paluuaika:</strong> ${formatDateTime(route.driveStopTimest)}</p>
+                        </div>
+                    `;
+
+                    const points = Array.isArray(route.points) ? route.points.filter(point => point.lat != null && point.lon != null) : [];
+
+                    if (!points.length) {
+                        return;
+                    }
+
+                    const mapPoints = points.map(point => [point.lat, point.lon]);
+                    const rasekomap = L.map('mapid').setView(mapPoints[0], 16);
+
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
                         maxZoom: 19,
                     }).addTo(rasekomap);
 
-                    // Add a marker at the specified coordinates
-                    let marker = L.marker([latitude, longitude]).addTo(rasekomap);
+                    const routeLine = L.polyline(mapPoints, { color: '#0b5cab', weight: 4 }).addTo(rasekomap);
+                    rasekomap.fitBounds(routeLine.getBounds());
 
-                    // Set the popup text
-                    let info = document.getElementById('register').innerHTML
-                    marker.bindPopup(info)
-                }
+                    L.marker(mapPoints[0]).addTo(rasekomap).bindPopup('Lähtö');
+                    L.marker(mapPoints[mapPoints.length - 1]).addTo(rasekomap).bindPopup('Paluu');
+                };
 
-                // Call the function 
-                loadJsonData();
+                loadRouteData();
             </script>
         </div>
     </div>
